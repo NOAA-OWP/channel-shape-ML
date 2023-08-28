@@ -134,17 +134,15 @@ The fourth key feature of this work is the roughness (Manning's n) for each loca
 ## HEC_RAS/LIDAR
 ...
 
-
-----
 ## Coastal test site
 
 Our first study site is located in the western US coastal regions as shown below
 
+<iframe src="assets/maps/studeysites.html" width="800" height="600"></iframe>
 
 
 
-
-
+----
 
 
 
