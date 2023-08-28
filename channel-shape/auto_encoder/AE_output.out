@@ -1,0 +1,437 @@
+
+Epoch 1: val_mae improved from inf to 0.27983, saving model to model/best_model_ref_fab.tf
+
+Epoch 2: val_mae improved from 0.27983 to 0.16607, saving model to model/best_model_ref_fab.tf
+
+Epoch 3: val_mae improved from 0.16607 to 0.14816, saving model to model/best_model_ref_fab.tf
+
+Epoch 4: val_mae did not improve from 0.14816
+
+Epoch 5: val_mae did not improve from 0.14816
+
+Epoch 6: val_mae did not improve from 0.14816
+
+Epoch 7: val_mae did not improve from 0.14816
+
+Epoch 8: val_mae did not improve from 0.14816
+
+Epoch 9: val_mae did not improve from 0.14816
+
+Epoch 10: val_mae did not improve from 0.14816
+
+Epoch 11: val_mae did not improve from 0.14816
+
+Epoch 12: val_mae did not improve from 0.14816
+
+Epoch 13: val_mae did not improve from 0.14816
+
+Epoch 14: val_mae did not improve from 0.14816
+
+Epoch 15: val_mae did not improve from 0.14816
+
+Epoch 16: val_mae did not improve from 0.14816
+
+Epoch 17: val_mae did not improve from 0.14816
+
+Epoch 18: val_mae did not improve from 0.14816
+
+Epoch 19: val_mae did not improve from 0.14816
+
+Epoch 20: val_mae did not improve from 0.14816
+
+Epoch 21: val_mae did not improve from 0.14816
+
+Epoch 22: val_mae did not improve from 0.14816
+
+Epoch 23: val_mae did not improve from 0.14816
+
+Epoch 24: val_mae did not improve from 0.14816
+
+Epoch 25: val_mae did not improve from 0.14816
+
+Epoch 26: val_mae did not improve from 0.14816
+
+Epoch 27: val_mae did not improve from 0.14816
+
+Epoch 28: val_mae did not improve from 0.14816
+
+Epoch 29: val_mae did not improve from 0.14816
+
+Epoch 30: val_mae did not improve from 0.14816
+
+Epoch 31: val_mae did not improve from 0.14816
+
+Epoch 32: val_mae did not improve from 0.14816
+
+Epoch 33: val_mae improved from 0.14816 to 0.13758, saving model to model/best_model_ref_fab.tf
+
+Epoch 34: val_mae improved from 0.13758 to 0.13619, saving model to model/best_model_ref_fab.tf
+
+Epoch 35: val_mae improved from 0.13619 to 0.13445, saving model to model/best_model_ref_fab.tf
+
+Epoch 36: val_mae did not improve from 0.13445
+
+Epoch 37: val_mae improved from 0.13445 to 0.13080, saving model to model/best_model_ref_fab.tf
+
+Epoch 38: val_mae did not improve from 0.13080
+
+Epoch 39: val_mae did not improve from 0.13080
+
+Epoch 40: val_mae did not improve from 0.13080
+
+Epoch 41: val_mae did not improve from 0.13080
+
+Epoch 42: val_mae did not improve from 0.13080
+
+Epoch 43: val_mae did not improve from 0.13080
+
+Epoch 44: val_mae did not improve from 0.13080
+
+Epoch 45: val_mae did not improve from 0.13080
+
+Epoch 46: val_mae did not improve from 0.13080
+
+Epoch 47: val_mae improved from 0.13080 to 0.13024, saving model to model/best_model_ref_fab.tf
+
+Epoch 48: val_mae did not improve from 0.13024
+
+Epoch 49: val_mae did not improve from 0.13024
+
+Epoch 50: val_mae did not improve from 0.13024
+
+Epoch 51: val_mae did not improve from 0.13024
+
+Epoch 52: val_mae improved from 0.13024 to 0.12635, saving model to model/best_model_ref_fab.tf
+
+Epoch 53: val_mae did not improve from 0.12635
+
+Epoch 54: val_mae improved from 0.12635 to 0.12586, saving model to model/best_model_ref_fab.tf
+
+Epoch 55: val_mae did not improve from 0.12586
+
+Epoch 56: val_mae did not improve from 0.12586
+
+Epoch 57: val_mae did not improve from 0.12586
+
+Epoch 58: val_mae did not improve from 0.12586
+
+Epoch 59: val_mae did not improve from 0.12586
+
+Epoch 60: val_mae did not improve from 0.12586
+
+Epoch 61: val_mae did not improve from 0.12586
+
+Epoch 62: val_mae did not improve from 0.12586
+
+Epoch 63: val_mae did not improve from 0.12586
+
+Epoch 64: val_mae did not improve from 0.12586
+
+Epoch 65: val_mae did not improve from 0.12586
+
+Epoch 66: val_mae did not improve from 0.12586
+
+Epoch 67: val_mae did not improve from 0.12586
+
+Epoch 68: val_mae did not improve from 0.12586
+
+Epoch 69: val_mae did not improve from 0.12586
+
+Epoch 70: val_mae did not improve from 0.12586
+
+Epoch 71: val_mae did not improve from 0.12586
+
+Epoch 72: val_mae did not improve from 0.12586
+
+Epoch 73: val_mae did not improve from 0.12586
+
+Epoch 74: val_mae did not improve from 0.12586
+
+Epoch 75: val_mae did not improve from 0.12586
+
+Epoch 76: val_mae did not improve from 0.12586
+
+Epoch 77: val_mae did not improve from 0.12586
+
+Epoch 78: val_mae did not improve from 0.12586
+
+Epoch 79: val_mae did not improve from 0.12586
+
+Epoch 80: val_mae did not improve from 0.12586
+
+Epoch 81: val_mae did not improve from 0.12586
+
+Epoch 82: val_mae did not improve from 0.12586
+
+Epoch 83: val_mae did not improve from 0.12586
+
+Epoch 84: val_mae did not improve from 0.12586
+
+Epoch 85: val_mae did not improve from 0.12586
+
+Epoch 86: val_mae did not improve from 0.12586
+
+Epoch 87: val_mae did not improve from 0.12586
+
+Epoch 88: val_mae did not improve from 0.12586
+
+Epoch 89: val_mae did not improve from 0.12586
+
+Epoch 90: val_mae did not improve from 0.12586
+
+Epoch 91: val_mae did not improve from 0.12586
+
+Epoch 92: val_mae did not improve from 0.12586
+
+Epoch 93: val_mae did not improve from 0.12586
+
+Epoch 94: val_mae did not improve from 0.12586
+
+Epoch 95: val_mae did not improve from 0.12586
+
+Epoch 96: val_mae did not improve from 0.12586
+
+Epoch 97: val_mae did not improve from 0.12586
+
+Epoch 98: val_mae did not improve from 0.12586
+
+Epoch 99: val_mae did not improve from 0.12586
+
+Epoch 100: val_mae did not improve from 0.12586
+
+Epoch 101: val_mae did not improve from 0.12586
+
+Epoch 102: val_mae did not improve from 0.12586
+
+Epoch 103: val_mae improved from 0.12586 to 0.11983, saving model to model/best_model_ref_fab.tf
+
+Epoch 104: val_mae did not improve from 0.11983
+
+Epoch 105: val_mae did not improve from 0.11983
+
+Epoch 106: val_mae did not improve from 0.11983
+
+Epoch 107: val_mae did not improve from 0.11983
+
+Epoch 108: val_mae did not improve from 0.11983
+
+Epoch 109: val_mae did not improve from 0.11983
+
+Epoch 110: val_mae did not improve from 0.11983
+
+Epoch 111: val_mae did not improve from 0.11983
+
+Epoch 112: val_mae did not improve from 0.11983
+
+Epoch 113: val_mae improved from 0.11983 to 0.07825, saving model to model/best_model_ref_fab.tf
+
+Epoch 114: val_mae did not improve from 0.07825
+
+Epoch 115: val_mae did not improve from 0.07825
+
+Epoch 116: val_mae did not improve from 0.07825
+
+Epoch 117: val_mae did not improve from 0.07825
+
+Epoch 118: val_mae did not improve from 0.07825
+
+Epoch 119: val_mae did not improve from 0.07825
+
+Epoch 120: val_mae did not improve from 0.07825
+
+Epoch 121: val_mae did not improve from 0.07825
+
+Epoch 122: val_mae did not improve from 0.07825
+
+Epoch 123: val_mae did not improve from 0.07825
+
+Epoch 124: val_mae did not improve from 0.07825
+
+Epoch 125: val_mae did not improve from 0.07825
+
+Epoch 126: val_mae did not improve from 0.07825
+
+Epoch 127: val_mae did not improve from 0.07825
+
+Epoch 128: val_mae did not improve from 0.07825
+
+Epoch 129: val_mae did not improve from 0.07825
+
+Epoch 130: val_mae did not improve from 0.07825
+
+Epoch 131: val_mae did not improve from 0.07825
+
+Epoch 132: val_mae did not improve from 0.07825
+
+Epoch 133: val_mae did not improve from 0.07825
+
+Epoch 134: val_mae did not improve from 0.07825
+
+Epoch 135: val_mae did not improve from 0.07825
+
+Epoch 136: val_mae did not improve from 0.07825
+
+Epoch 137: val_mae did not improve from 0.07825
+
+Epoch 138: val_mae did not improve from 0.07825
+
+Epoch 139: val_mae did not improve from 0.07825
+
+Epoch 140: val_mae did not improve from 0.07825
+
+Epoch 141: val_mae did not improve from 0.07825
+
+Epoch 142: val_mae did not improve from 0.07825
+
+Epoch 143: val_mae did not improve from 0.07825
+
+Epoch 144: val_mae did not improve from 0.07825
+
+Epoch 145: val_mae did not improve from 0.07825
+
+Epoch 146: val_mae did not improve from 0.07825
+
+Epoch 147: val_mae did not improve from 0.07825
+
+Epoch 148: val_mae did not improve from 0.07825
+
+Epoch 149: val_mae did not improve from 0.07825
+
+Epoch 150: val_mae did not improve from 0.07825
+
+Epoch 151: val_mae did not improve from 0.07825
+
+Epoch 152: val_mae did not improve from 0.07825
+
+Epoch 153: val_mae did not improve from 0.07825
+
+Epoch 154: val_mae did not improve from 0.07825
+
+Epoch 155: val_mae did not improve from 0.07825
+
+Epoch 156: val_mae did not improve from 0.07825
+
+Epoch 157: val_mae did not improve from 0.07825
+
+Epoch 158: val_mae did not improve from 0.07825
+
+Epoch 159: val_mae did not improve from 0.07825
+
+Epoch 160: val_mae did not improve from 0.07825
+
+Epoch 161: val_mae did not improve from 0.07825
+
+Epoch 162: val_mae did not improve from 0.07825
+
+Epoch 163: val_mae did not improve from 0.07825
+
+Epoch 164: val_mae did not improve from 0.07825
+
+Epoch 165: val_mae did not improve from 0.07825
+
+Epoch 166: val_mae did not improve from 0.07825
+
+Epoch 167: val_mae did not improve from 0.07825
+
+Epoch 168: val_mae did not improve from 0.07825
+
+Epoch 169: val_mae did not improve from 0.07825
+
+Epoch 170: val_mae did not improve from 0.07825
+
+Epoch 171: val_mae did not improve from 0.07825
+
+Epoch 172: val_mae did not improve from 0.07825
+
+Epoch 173: val_mae did not improve from 0.07825
+
+Epoch 174: val_mae did not improve from 0.07825
+
+Epoch 175: val_mae did not improve from 0.07825
+
+Epoch 176: val_mae did not improve from 0.07825
+
+Epoch 177: val_mae did not improve from 0.07825
+
+Epoch 178: val_mae did not improve from 0.07825
+
+Epoch 179: val_mae did not improve from 0.07825
+
+Epoch 180: val_mae did not improve from 0.07825
+
+Epoch 181: val_mae did not improve from 0.07825
+
+Epoch 182: val_mae did not improve from 0.07825
+
+Epoch 183: val_mae did not improve from 0.07825
+
+Epoch 184: val_mae did not improve from 0.07825
+
+Epoch 185: val_mae did not improve from 0.07825
+
+Epoch 186: val_mae did not improve from 0.07825
+
+Epoch 187: val_mae did not improve from 0.07825
+
+Epoch 188: val_mae did not improve from 0.07825
+
+Epoch 189: val_mae did not improve from 0.07825
+
+Epoch 190: val_mae did not improve from 0.07825
+
+Epoch 191: val_mae did not improve from 0.07825
+
+Epoch 192: val_mae did not improve from 0.07825
+
+Epoch 193: val_mae did not improve from 0.07825
+
+Epoch 194: val_mae did not improve from 0.07825
+
+Epoch 195: val_mae did not improve from 0.07825
+
+Epoch 196: val_mae did not improve from 0.07825
+
+Epoch 197: val_mae did not improve from 0.07825
+
+Epoch 198: val_mae did not improve from 0.07825
+
+Epoch 199: val_mae did not improve from 0.07825
+
+Epoch 200: val_mae did not improve from 0.07825
+
+Epoch 201: val_mae did not improve from 0.07825
+
+Epoch 202: val_mae did not improve from 0.07825
+
+Epoch 203: val_mae did not improve from 0.07825
+
+Epoch 204: val_mae did not improve from 0.07825
+
+Epoch 205: val_mae did not improve from 0.07825
+
+Epoch 206: val_mae did not improve from 0.07825
+
+Epoch 207: val_mae did not improve from 0.07825
+
+Epoch 208: val_mae did not improve from 0.07825
+
+Epoch 209: val_mae did not improve from 0.07825
+
+Epoch 210: val_mae did not improve from 0.07825
+
+Epoch 211: val_mae did not improve from 0.07825
+
+Epoch 212: val_mae did not improve from 0.07825
+
+Epoch 213: val_mae did not improve from 0.07825
+ 1/95 [..............................] - ETA: 12s35/95 [==========>...................] - ETA: 0s 69/95 [====================>.........] - ETA: 0s95/95 [==============================] - 0s 1ms/step
+ 1/17 [>.............................] - ETA: 0s17/17 [==============================] - 0s 1ms/step
+hwnodesqkm_dummy
+Training Accuracy: 0.04%
+
+hwnodesqkm
+Training Accuracy: 0.03%
+
+slopelenkm
+Training Accuracy: 95.82%
+Testing Accuracy: 95.77%

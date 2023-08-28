@@ -1,0 +1,162 @@
+{
+    "ref_fab": [
+        "hwnodesqkm_dummy",
+        "hwnodesqkm",
+        "slopelenkm"
+    ],
+    "ref_fab_extract": [
+        "ref_fab_feature"
+    ],
+    "soil": [
+        "hb_mean_0_5",
+        "lambda_mean_0_5",
+        "n_mean_0_5",
+        "alpha_mean_0_5"
+    ],
+    "soil_extract": [
+        "soil_feature"
+    ],
+    "stream_cat_hydraulic": [
+        "CompStrgthCat_dummy",
+        "HydrlCondCat_dummy",
+        "K2OCat_dummy",
+        "CompStrgthCat",
+        "HydrlCondCat",
+        "K2OCat"
+    ],
+    "stream_cat_hydraulic_extract": [
+        "scat_hydra_feature1",
+        "scat_hydra_feature2"
+    ],
+    "stream_cat_lithology": [
+        "PctAlkIntruVolCat_dummy",
+        "PctCoastCrsCat_dummy",
+        "PctColluvSedCat_dummy",
+        "PctEolCrsCat_dummy",
+        "PctEolFineCat_dummy",
+        "PctExtruVolCat_dummy",
+        "PctGlacLakeCrsCat_dummy",
+        "PctGlacLakeFineCat_dummy",
+        "PctGlacTilClayCat_dummy",
+        "PctGlacTilCrsCat_dummy",
+        "PctGlacTilLoamCat_dummy",
+        "PctHydricCat_dummy",
+        "PctNonCarbResidCat_dummy",
+        "PctSalLakeCat_dummy",
+        "PctSilicicCat_dummy",
+        "Fe2O3Cat",
+        "PctAlkIntruVolCat",
+        "PctAlluvCoastCat",
+        "PctCarbResidCat",
+        "PctCoastCrsCat",
+        "PctColluvSedCat",
+        "PctEolCrsCat",
+        "PctEolFineCat",
+        "PctExtruVolCat",
+        "PctGlacLakeCrsCat",
+        "PctGlacLakeFineCat",
+        "PctGlacTilClayCat",
+        "PctGlacTilCrsCat",
+        "PctGlacTilLoamCat",
+        "PctHydricCat",
+        "PctNonCarbResidCat",
+        "PctSalLakeCat",
+        "PctSilicicCat"
+    ],
+    "stream_cat_lithology_extract": [
+        "scat_lith_feature1",
+        "scat_lith_feature2",
+        "scat_lith_feature3"
+    ],
+    "stream_cat_ant": [
+        "FertCat",
+        "ManureCat",
+        "AgKffactCat",
+        "CanalDensCat",
+        "DamDensCat",
+        "DamNIDStorCat",
+        "DamNrmStorCat",
+        "HUDen2010Cat",
+        "PopDen2010Cat",
+        "RdCrsCat",
+        "RdCrsSlpWtdCat",
+        "RdDensCat",
+        "RdDensCat_dummy"
+    ],
+    "stream_cat_ant_extract": [
+        "scat_ant_feature1",
+        "scat_ant_feature2",
+        "scat_ant_feature3"
+    ],
+    "stream_cat_nlcd": [
+        "PctIce_ave_dummy",
+        "PctBl_ave",
+        "PctConif_ave",
+        "PctCrop_ave",
+        "PctDecid_ave",
+        "PctFire_ave",
+        "PctFrstLoss_ave",
+        "PctGrs_ave",
+        "PctHay_ave",
+        "PctHbWet_ave",
+        "PctIce_ave",
+        "PctImp_ave",
+        "PctMxFst_ave",
+        "PctOw_ave",
+        "PctShrb_ave",
+        "PctUrbHi_ave",
+        "PctUrbLo_ave",
+        "PctUrbMd_ave",
+        "PctUrbOp_ave",
+        "PctWdWet_ave"
+    ],
+    "stream_cat_nlcd_extract": [
+        "scat_nlcd_feature1",
+        "scat_nlcd_feature2",
+        "scat_nlcd_feature3"
+    ],
+    "others": [
+        "BFICat",
+        "CatAreaSqKm",
+        "ElevCat",
+        "PctWaterCat",
+        "PrecipCat",
+        "RckDepCat",
+        "RockNCat",
+        "RunoffCat",
+        "WaterInputCat",
+        "WetIndexCat",
+        "WtDepCat",
+        "BFICat_dummy",
+        "RckDepCat_dummy",
+        "RockNCat_dummy",
+        "WtDepCat_dummy",
+        "steamcat_dummy"
+    ],
+    "flow_frequency": [
+        "ff_1.5",
+        "ff_2",
+        "ff_5",
+        "ff_10",
+        "ff_15",
+        "ff_25",
+        "ff_35",
+        "ff_50",
+        "ff_60",
+        "ff_75",
+        "ff_85",
+        "ff_90",
+        "ff_95",
+        "ff_98",
+        "ff_99",
+        "ff_100",
+        "ff_200",
+        "ff_500",
+        "ff_1000"
+    ],
+    "flow_frequency_extract": [
+        "ff_feature1",
+        "ff_feature2",
+        "ff_feature3"
+    ]
+}

@@ -1,0 +1,553 @@
+{
+    "test_space": {
+        "knr_params": {
+            "n_neighbors": [
+                2,
+                10
+            ],
+            "algorithm": [
+                "auto"
+            ]
+        },
+        "bsvr_params": {
+            "n_estimators": [
+                10,
+                100
+            ],
+            "max_features": [
+                1
+            ],
+            "max_samples": [
+                0.6
+            ]
+        },
+        "lgb_params": {
+            "learning_rate": [
+                0.001
+            ],
+            "n_estimators": [
+                10,
+                100
+            ],
+            "max_depth": [
+                3
+            ],
+            "reg_alpha": [
+                0
+            ],
+            "reg_lambda": [
+                0
+            ],
+            "colsample_bytree": [
+                0.3
+            ],
+            "subsample": [
+                0.6
+            ]
+        },
+        "hgb_params": {
+            "learning_rate": [
+                0.001
+            ],
+            "max_iter": [
+                10,
+                100
+            ],
+            "max_depth": [
+                null
+            ],
+            "l2_regularization": [
+                0
+            ],
+            "min_samples_leaf": [
+                15
+            ]
+        },
+        "rf_params": {
+            "n_estimators": [
+                10,
+                100
+            ],
+            "max_depth": [
+                3
+            ],
+            "max_features": [
+                null
+            ],
+            "max_samples": [
+                0.6
+            ]
+        },
+        "ard_params": {
+            "n_iter": [
+                20
+            ],
+            "tol": [
+                0.001
+            ],
+            "alpha_1": [
+                1e-9
+            ],
+            "alpha_2": [
+                1e-9
+            ],
+            "lambda_1": [
+                1e-9
+            ],
+            "lambda_2": [
+                1e-9
+            ],
+            "fit_intercept": [
+                "True",
+                "False"
+            ]
+        },
+        "enet_params": {
+            "l1_ratio": [
+                1.0
+            ],
+            "alpha": [
+                1.0
+            ],
+            "max_iter": [
+                100
+            ],
+            "tol": [
+                1e-4
+            ],
+            "fit_intercept": [
+                "True",
+                "False"
+            ]
+        },
+        "mlp_params": {
+            "hidden_layer_sizes": [
+                "(100,)"
+            ],
+            "activation": [
+                "identity"
+            ],
+            "solver": [
+                "adam"
+            ],
+            "alpha": [
+                1e-4
+            ],
+            "batch_size": [
+                "auto"
+            ],
+            "learning_rate": [
+                "constant"
+            ],
+            "learning_rate_init": [
+                1e-3
+            ],
+            "max_iter": [
+                10
+            ]
+        },
+        "bays_params": {
+            "n_iter": [
+                10
+            ],
+            "tol": [
+                1e-3
+            ],
+            "alpha_1": [
+                1e-6
+            ],
+            "alpha_2": [
+                1e-6
+            ],
+            "lambda_1": [
+                1e-6
+            ],
+            "lambda_2": [
+                1e-6
+            ],
+            "fit_intercept": [
+                "True",
+                "False"
+            ]
+        },
+        "orth_params": {
+            "n_nonzero_coefs": [
+                1,
+                2
+            ],
+            "tol": [
+                null,
+                1
+            ],
+            "fit_intercept": [
+                "True",
+                "False"
+            ],
+            "precompute": [
+                "True",
+                "False"
+            ]
+        },
+        "xgb_params": {
+            "max_depth": [
+                3
+            ],
+            "learning_rate": [
+                0.001
+            ],
+            "n_estimators": [
+                10,
+                100
+            ],
+            "colsample_bytree": [
+                0.3
+            ],
+            "min_child_weight": [
+                1
+            ],
+            "gamma": [
+                0
+            ],
+            "subsample": [
+                0.6
+            ]
+        }
+    },
+    "actual_space": {
+        "knr_params": {
+            "n_neighbors": [
+                2,
+                3,
+                5,
+                10
+            ],
+            "algorithm": [
+                "auto",
+                "ball_tree",
+                "kd_tree",
+                "brute"
+            ]
+        },
+        "bsvr_params": {
+            "n_estimators": [
+                10,
+                30,
+                100,
+                500,
+                2500,
+                5000
+            ],
+            "max_features": [
+                1,
+                2,
+                4,
+                10,
+                20
+            ],
+            "max_samples": [
+                0.6,
+                0.8,
+                1.0
+            ]
+        },
+        "lgb_params": {
+            "learning_rate": [
+                0.001
+            ],
+            "n_estimators": [
+                4000,
+                8000,
+                11000,
+                13000
+            ],
+            "max_depth": [
+                7,
+                9
+            ],
+            "reg_alpha": [
+                0,
+                0.001,
+                0.01,
+                0.1
+            ],
+            "reg_lambda": [
+                0,
+                0.001,
+                0.01,
+                0.1
+            ],
+            "colsample_bytree": [
+                0.3,
+                0.5
+            ],
+            "subsample": [
+                0.6,
+                0.8,
+                1.0
+            ]
+        },
+        "hgb_params": {
+            "learning_rate": [
+                0.001
+            ],
+            "max_iter": [
+                4000,
+                8000,
+                11000,
+                13000
+            ],
+            "max_depth": [
+                null,
+                10,
+                20
+            ],
+            "l2_regularization": [
+                0,
+                0.001,
+                0.01,
+                0.1
+            ],
+            "min_samples_leaf": [
+                15,
+                20,
+                50
+            ]
+        },
+        "rf_params": {
+            "n_estimators": [
+                4000,
+                8000,
+                11000,
+                13000
+            ],
+            "max_depth": [
+                5,
+                7,
+                9
+            ],
+            "max_features": [
+                "sqrt",
+                "log2",
+                null
+            ],
+            "max_samples": [
+                0.6,
+                0.8,
+                1.0
+            ]
+        },
+        "ard_params": {
+            "n_iter": [
+                100,
+                200,
+                500,
+                5000, 
+                10000
+            ],
+            "tol": [
+                0.001
+            ],
+            "alpha_1": [
+                1e-9,
+                1e-7,
+                1e-4,
+                1e-1,
+                1
+            ],
+            "alpha_2": [
+                1e-9,
+                1e-7,
+                1e-4,
+                1e-1,
+                1
+            ],
+            "lambda_1": [
+                1e-9,
+                1e-3,
+                1,
+                100, 
+                1000,
+                5000
+            ],
+            "lambda_2": [
+                1e-9,
+                1e-3,
+                1,
+                10,
+                100, 
+                1000
+            ],
+            "fit_intercept": [
+                "True",
+                "False"
+            ]
+        },
+        "enet_params": {
+            "l1_ratio": [
+                0.01,
+                0.1,
+                0.5,
+                0.9
+            ],
+            "alpha": [
+                0.01,
+                0.1,
+                0.5,
+                0.9
+            ],
+            "max_iter": [
+                1000,
+                10000
+            ],
+            "tol": [
+                1e-6,
+                1e-5,
+                1e-4
+            ],
+            "fit_intercept": [
+                "True",
+                "False"
+            ]
+        },
+        "mlp_params": {
+            "hidden_layer_sizes": [
+                "(1000,2)",
+                "(15000,)"
+            ],
+            "activation": [
+                "identity",
+                "logistic",
+                "tanh",
+                "relu"
+            ],
+            "solver": [
+                "adam"
+            ],
+            "alpha": [
+                1e-4,
+                1e-1
+            ],
+            "batch_size": [
+                "auto",
+                64,
+                8
+            ],
+            "learning_rate": [
+                "constant",
+                "invscaling",
+                "adaptive"
+            ],
+            "learning_rate_init": [
+                1e-5
+            ],
+            "max_iter": [
+                200,
+                2000
+            ]
+        },
+	    "bays_params": {
+            "n_iter": [
+                300,
+                1000,
+                5000,
+                10000,
+                15000
+            ],
+            "tol": [
+                1e-5,
+                1e-3,
+                1e-1,
+                0.5
+            ],
+            "alpha_1": [
+                1e-12,
+                1e-9,
+                1e-6,
+                1e-3,
+                1e-1
+            ],
+            "alpha_2": [
+                1e-9,
+                1e-6,
+                1e-3,
+                1e-1,
+                0.5
+            ],
+            "lambda_1": [
+                1e-9,
+                1e-6,
+                1e-3,
+                1e-1,
+                0.5
+            ],
+            "lambda_2": [
+                1e-9,
+                1e-6,
+                1e-3,
+                1e-1
+            ],
+            "fit_intercept": [
+                "True",
+                "False"
+            ]
+        },
+        "orth_params": {
+            "n_nonzero_coefs": [
+                1,
+                5, 
+                15,
+                40, 
+                100
+            ],
+            "tol": [
+                null,
+                1,
+                5,
+                25,
+                60
+            ],
+            "fit_intercept": [
+                "True",
+                "False"
+            ],
+            "precompute": [
+                "True",
+                "False"
+            ]
+        },
+        "xgb_params": {
+            "max_depth": [
+                7,
+                9
+            ],
+            "learning_rate": [
+                0.001
+            ],
+            "n_estimators": [
+                4000,
+                8000,
+                11000,
+                13000
+            ],
+            "colsample_bytree": [
+                0.3,
+                0.5
+            ],
+            "min_child_weight": [
+                1,
+                5,
+                10
+            ],
+            "gamma": [
+                0,
+                2.5,
+                5
+            ],
+            "subsample": [
+                0.6,
+                0.8,
+                1.0
+            ]
+        }
+    }
+}
