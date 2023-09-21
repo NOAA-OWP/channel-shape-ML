@@ -140,7 +140,7 @@ Our first study site is located in the western US coastal regions as shown below
 
 <iframe src="assets/maps/studeysites.html" width="800" height="600"></iframe>
 
-
+[Click here](https://arashmodrad.github.io/NOAA-OWP/3d-hydrofabric/tree/master/assets/maps/studeysites.html)
 
 ----
 
