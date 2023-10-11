@@ -87,10 +87,10 @@ The ML model establishes a relation between different attributes that are agrreg
 python3 ./preprocess/filter_adcp.py
 ```
 
-- filttering GEE data
+- filttering climate data
 
 ```shell
-python3 ./preprocess/gee_exports.py
+python3 ./preprocess/cli_exports.py
 ```
 
 
