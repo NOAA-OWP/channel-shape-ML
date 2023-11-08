@@ -15,7 +15,7 @@
 
 ## Repository
 
-This repository contains all data models, software, technical details of the development of a 3D channel geometry for CONUS.
+This repository contains description of the 3D hydrofabric data model and links to all packages, data, and technical details of the development of a 3D channel geometry for CONUS.
   
 ### Cloning
 
