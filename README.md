@@ -152,22 +152,7 @@ We compare each dataset and use OSM as river benchmark and
 
 ## Getting involved
 
-NOAA's National Water Center welcomes anyone to contribute to the 3D Hydrofabric repository to enhance OWP's FIM and NextGen capabilities. List of contact information is outlined below:
-
-Fernando Salas (FIM, GID, fernando.salas@noaa.gov) 
-
-Trey Flowers (NextGen, APD, trey.flowers@noaa.gov)
-
-J. Michael Johnson (jmichael@noaa.gov) for questions regarding hydrofabrics.
-
-Dami Eyelade (dami.eyelade@noaa.gov) for questions regarding satellite derived products.
-
-Angus Watters (angus.watters@noaa.gov) for questions regarding cross sections.
-
-Arash Modaresi Rad (arash.rad@noaa.gov) for questions regarding machine learning models.
-
-Alemayehu Midekisa (GID, alemayehu.midekisa@noaa.gov) 
-
+NOAA's National Water Center welcomes anyone to contribute to the 3D Hydrofabric repository to enhance OWP's FIM and NextGen capabilities. Please contact Alemayehu Midekisa (alemayehu.midekisa@noaa.gov) or Fernando Salas (fernando.salas@noaa.gov) to get started.
 
 ----
 
