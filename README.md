@@ -1,12 +1,11 @@
-# 3D channel geometry
+# ML channel geometry
 
 - [Repo](#Repository)
   * [Cloning](#Cloning)
 - [Overview](#Overview)
 - [Data Model](#Data-Model)
-- [Cross Sections](#Cross-Section )
-- [ML Approach for Missing Area](#ML-channel-width,-depth,-and-shape)
-- [Satellite based bankfull width](#Satellite-based-bankfull-width)
+- [Width and Depth](#ML-Width-Depth)
+- [Shape](#ML-Channel-Shape)
 - [Getting involved](#Getting-involved)
 - [Open source licensing info](#Open-source-licensing-info)
 
@@ -15,7 +14,7 @@
 
 ## Repository
 
-This repository contains description of the 3D hydrofabric data model and links to all packages, data, and technical details of the development of a 3D channel geometry for CONUS.
+This repository contains description of the Machine Learning (ML) data models for estimation of bankfull channel width, depth, and shape to be used in the development of the 3D hydrofabrics.
   
 ### Cloning
 
@@ -24,60 +23,21 @@ git clone https://github.com/NOAA-OWP/3d-hydrofabric.git
 ```
 ## Overview
 
-This project develops a high resolution river channel/corridor data product based of [Reference Hydrofabric](https://noaa-owp.github.io/hydrofabric/articles/02-design-deep-dive.html) that support the modeling needs of NOAA and USGS. It is comprised of multiple modules that together form a clear picture of 3D hydrofabric data model. This includes:
-
-* Development of an automated tools to generate cross sections from a DEM
-* Develop machine learning algorithms to predict river channel depth, width, and shape using ground observation 3.
-* Estimate channel width using multi-source data and methods (e.g., remote sensing)
-
-Schematic representation of the data model structure and how it is integrated into different products is shown bellow.
-
-![DataModel1](assets/images/data_model.png)
-
-One of the challenges of this work is mapping river bathymetries where there is no observation/measurement. The missing topobathy data is the in-channel part of a river system that a Digital Elevation Model (DEM) is not able to penetrate and sees the area as a flat surface. This missing topobathy data results in a misrepresentation of river volume. A representation of channel **depth (D), width (W), and shape** will allow better characterization of flow dynamics and help improve hydrodynamic models, routing models, and synthetic rating curves.
+This project is comprised of multiple subparts that together form a clear picture of 3D hydrofabric data model. One of the challenges of this work is mapping river bathymetries where there is no observation/measurement. The missing topobathy data is the in-channel part of a river system that a Digital Elevation Model (DEM) is not able to penetrate and sees the area as a flat surface. This missing topobathy data results in a misrepresentation of river volume. A representation of channel **depth (D), width (W), and shape** will allow better characterization of flow dynamics and help improve hydrodynamic models, routing models, and synthetic rating curves.
 
 **These three characteristics are obtained from satellite imagery, other data products, and machine learning models and describe in channel geometry that substitutes locations where there is no bathymetry measurement. The new channel shapes that has an estimate of missing channel area will improve modeling capabilities compared to having no bathymetry data**
-
-Finally, all these data are provided through an R package that cuts cross-sections along rivers using 10m DEM and is informed with satellite, other products, and machine learning estimates of channel geometry.
-
 
 ## Data Model
 
 The structure of the data model is based on the reference Hydrofabric Data Model and 
 
-* Has the ability to represent a cross section transect and elevation
-* Index knows and synthetic cross sections to a reference network
-* Can be supplemented by HEC RAS, eHydro, Lidar
+* contains Bankfull (defined as 2-year flood frequency) and in-channel (defined as 2-year flood frequency) width and depth ML estimates
+* contains channel shape ML estimates based on analytical derivation of parameter r from [Dingman (2007)](https://www.sciencedirect.com/science/article/pii/S0022169406005063?casa_token=gKpjjfHrupEAAAAA:Cp1tVhLnwlfddS38gpcKiyOm_xR09JeTgEtYZbCP-c8SUSth6Fx6gBPOWeyxZldCClEL20EJ2JI)
+* Indexed to the National Hydrologic Geospatial Fabric (hydrofabric) for the Next Generation (NextGen) Hydrologic Modeling Framework
 
-![DataModel2](assets/images/data_model2.png)
+## ML Width Depth
 
-visit this [website](https://noaa-owp.github.io/hydrofabric/articles/cs_dm.html) for more updates.
-
-## Cross Section 
-
-The cross-section tool purpose is to generate DEM-based cross-sections (flood plains) for hydrographic networks and contains the estimates of bankfull channel cross section geometry and wherever there is HEC-RAS or Lidar data it incorporates them as well. 
-
-An example of how these cross-sections look is shown below and a full description is available at [terrain_sliceR](https://github.com/mikejohnson51/terrain_sliceR)
-
-<div style="display: flex; justify-content: center;">
-  <img src="assets/images/cross-sec1.png" width="50%">
-</div>
-
-OWP requires cross sections across the complete CONUS network to support hydrologic modeling and requisite flood mapping. We have automated this process and dealt with issues such as braided systems.
-
-![cs2](assets/images/cs2.png)
-
-Then we define and classify the cross section into left, right banks and in-channel as shown below. The problem is the flat line on the bottom of these plots, which represents the water level when this data was collected and nothing about the conditions at the time of collection (flood, dry year, etc.)
-
-<div style="display: flex; justify-content: center;">
-  <img src="assets/images/cs3.png" width="50%">
-</div>
-
-More details about the proposed data model that follows Hyfeatures referencing and how tabular and spatial data are represented can be found [here](https://noaa-owp.github.io/hydrofabric/articles/cs_dm.html)
-
-## ML channel width, depth, and shape 
-
-The goal of this machine learning model is to learn channel shape, width, and depth using at a feature hydraulic geometry relations ([see here](https://noaa-owp.github.io/hydrofabric/articles/07-channel-geometry.html)). Here we use the concept of paramterizing channel proposed by [Dingman (2007)](https://www.sciencedirect.com/science/article/pii/S0022169406005063?casa_token=gKpjjfHrupEAAAAA:Cp1tVhLnwlfddS38gpcKiyOm_xR09JeTgEtYZbCP-c8SUSth6Fx6gBPOWeyxZldCClEL20EJ2JI) to get an estimate of channel shape.
+The goal of this machine learning model is to learn channel width, and depth using at a feature hydraulic geometry relations ([see here](https://noaa-owp.github.io/hydrofabric/articles/07-channel-geometry.html)). Here we use the concept of paramterizing channel proposed by [Dingman (2007)](https://www.sciencedirect.com/science/article/pii/S0022169406005063?casa_token=gKpjjfHrupEAAAAA:Cp1tVhLnwlfddS38gpcKiyOm_xR09JeTgEtYZbCP-c8SUSth6Fx6gBPOWeyxZldCClEL20EJ2JI) to get an estimate of channel shape.
 
 The inputs to the model are carefully chosen from investigating a wide litrature on this topic including works by [Lin et al., 2020](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019GL086405), [Blackburn-Lynch et al., 2017](https://onlinelibrary.wiley.com/doi/full/10.1111/1752-1688.12540?casa_token=UgvAE7gtRPsAAAAA%3Anb2Kq8WP8d_TAD8lu7CE1CkpaY7386FzBPvym436EOqP3gc7pGKRcxE_Tt1XQEtRYEAngTHmLa1iDxo), [Doyle et al., 2023](https://onlinelibrary.wiley.com/doi/full/10.1111/1752-1688.13116?casa_token=mGKCMw89-DoAAAAA%3AF3lJezzo74bXEB-8uo04pBYyth6ny9pi_R_u9Ubb48cI7sMO9erOisD_g8dQsjd-r-LHJEO-e0hT_EA).
 
@@ -97,58 +57,73 @@ Given a set of characteristics described above the ML model predicts all 6 coeff
 that gives a schematic representation of the channel shape.
 
 <div style="display: flex; justify-content: center;">
-  <img src="assets/images/cshape2.png" width="50%">
+  <img src="assets/images/cshape2.jpg" width="80%">
 </div>
+.
 
-The trained ML model then can be used to predict channel shape for all valid locations in HydroSWOT database.
+The predictions of Bankfull width and depth surpass the currently implemented regional estimates in NWM 2, 2.1, and 3 for different hydrological landscape regions.
 
-![Example1](assets/images/predicted.png)
-
-and predictions of Bankfull width and depth surpass the currently implemented regional estimates in NWM 2, 2.1, and 3 for different hydrological landscape regions.
 
 ![Example2](assets/images/ml1.png)
 
+To deploy the ML model 
+```shell
+cd channel-WD/deployment
+bash conda_setup.bash -n -1 
+```
+Where:  
+
+**-n** is the number of cores to be used in parallel. An integer depends on the number of cores. Use -1 for utilizing all
+
+To train the ML model 
+
+```shell
+cd channel-WD
+./run_ml.bash -c mymodel -n -1 -x False -y False -r 0.6 -t 5
+```
+Where:  
+
+**-c** is the name of the running script and generated folder with outputs. Any name.
+
+**-n** is the number of cores to be used in parallel. An integer depends on the number of cores. Use -1 for utilizing all
+
+**-x** is the to apply a transformation to predictor variables. Options are True and False
+
+**-y** is the to apply a transformation to predicted variables. Options are True and False
+
+**-r** is the coefficient of determination used to filter bad measurements in ADCP data. Ranges from 0.0-1.0
+
+**-t** is the count threshold to filter stations that have number of recorded observations greater than the count threshold i.e., 5
+
+
+## ML Channel Shape
+
+The channel shape ML model is trained similarly to that channel shape and width model. The testing however is done in time varying way such that every measurement of width and depth for a respective discharge are tested against the predicted AHG coefficients by plugin discharge into the learned AHG relations. The trained ML model then can be used to predict channel shape for all valid locations in HydroSWOT database.
+
+![Example1](assets/images/predicted.png)
+
+And further extended to CONUS based on reference fabric.
+
 For comprehensive details please visit this [site](https://sites.google.com/u.boisestate.edu/conus-fhg/home?pli=1#h.p04mdv3fynoe) for more details.
 
-Ultimately, the ML based channel geometry for bankfull conditions are used to burn in the missing bathymetry.
+To train the ML model 
 
-![Example3](assets/images/cs4.png)
+```shell 
+cd channel-shape
+sh run_ml.bash -c mymodel -n -1 -x False -y False -r 0.8
+```
 
-## Satellite based bankfull width
+Where:  
 
-For larger river systems, we use different remote sensing and post-process products such as [Global River Widths from Landsat (GRWL)](https://zenodo.org/record/1297434), [MERIT Hydro](http://hydro.iis.u-tokyo.ac.jp/~yamadai/MERIT_Hydro/), and etc. that are outlined below:
+**-c** is the name of the running script and generated folder with outputs. Any name.
 
-![Example4](assets/images/sat1.png)
+**-n** is the number of cores to be used in parallel. An integer depends on the number of cores. Use -1 for utilizing all
 
-> North American River Width Data Set (NARWidth) [link](http://gaia.geosci.unc.edu/NARWidth/#:~:text=NARWidth%20is%20composed%20of%20planform,Landsat%20TM%20and%20ETM%2B%20imagery.)
+**-x** is the to apply a transformation to predictor variables. Options are True and False
 
-> Global River Widths from Landsat (GRWL) [link](https://zenodo.org/records/1297434)
+**-y** is the to apply a transformation to predicted variables. Options are True and False
 
-> Global Long-term River Width (GLOW) [link](https://zenodo.org/records/6425657)
-
-> Openstreetmap river polygons [link](https://www.geofabrik.de/data/download.html)
-
-> Global river bankfull width and depth database [link](https://zenodo.org/records/61758)
-
-> CONUS Bankfull Hydraulic Geometry [link](https://www.sciencebase.gov/catalog/item/5cf02bdae4b0b51330e22b85)
-
-> Global Surface Water Explorer (GSW) [link](https://global-surface-water.appspot.com/download)
-
-> MERIT hydro [link](http://hydro.iis.u-tokyo.ac.jp/~yamadai/MERIT_Hydro/)
-
-> U.S. Forest Service national riparian areas [link](https://www.fs.usda.gov/rds/archive/catalog/RDS-2019-0030)
-
-> SWOT River Database (SWORD) [link](https://zenodo.org/records/10013982)
-
-> Global bankfull river widths (GBRW) [link](https://zenodo.org/records/3552776)
-
-We compare each dataset and use OSM as river benchmark and 
-
-* We perform Vector operations/spatial queries to link data
-
-* Width Attributes from other datasets added to reference hydrofabric dataset 
-
-![Example5](assets/images/sat2.png)
+**-r** is the coefficient of determination used to filter bad measurements in ADCP data. Ranges from 0.0-1.0
 
 ## Getting involved
 
