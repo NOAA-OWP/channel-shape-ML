@@ -15,6 +15,10 @@
 ## Repository
 
 This repository contains description of the Machine Learning (ML) data models for estimation of bankfull channel width, depth, and shape to be used in the development of the 3D hydrofabrics.
+
+[**Bankfull Width and Depth**](channel-WD/README.md)
+
+[**Bankfull Shape**](channel-shape/README.md)
   
 ### Cloning
 
