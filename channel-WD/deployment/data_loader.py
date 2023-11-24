@@ -29,7 +29,6 @@ class DataLoader:
         self.data                       = pd.DataFrame([])
         self.rand_state                 = rand_state
         np.random.seed(self.rand_state)
-        
         # ___________________________________________________
         # Check directories
         if not os.path.isdir(os.path.join(os.getcwd(),"models/")):
@@ -96,9 +95,10 @@ class DataLoader:
 
         """
         matching_files = []
-        folder_path = '/models/'
+        folder_path = 'models'
+        full_path = os.path.join(os.getcwd(), folder_path)
         # Iterate through the files in the folder
-        for root, dirs, files in os.walk(folder_path):
+        for root, dirs, files in os.walk(full_path):
             for filename in files:
                 # Check if both "PCA" and "Y_bf" are present in the file name
                 search_pattern = f'*PCA*{variable}*'
