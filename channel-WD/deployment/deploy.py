@@ -100,15 +100,26 @@ class DPModel:
         dl_obj.addExtraFeatures(target_name)
         dl_obj.buildPCA(target_name)
         
-        if target_name.startswith("Y"):
+        if target_name == 'Y_bf':
+            model_type = 'xgb'
+        elif target_name == 'Y_in':
+            model_type = 'lgb'
+        elif target_name == 'TW_bf':
             model_type = 'xgb'
         else:
             model_type = 'lgb'
+        # if target_name.startswith("Y"):
+        #     model_type = 'xgb'
+        # else:
+        #     model_type = 'lgb'
 
         model, feats = self.loadModel(target_name, vote_flag=False, meta_flag=False, best_flag=True, file='bf', model_type=model_type)
 
         data_in = dl_obj.data[feats]
-        y_pred_label = 'ML_' + target_name + '(m)'
+        y_pred_label = 'owp_' + target_name
+        if target_name.endswith("in"):
+            y_pred_label = y_pred_label+'chan'
+        y_pred_label = y_pred_label.lower()
         preds_all = model.predict(data_in)
         
         return y_pred_label, preds_all
@@ -128,7 +139,7 @@ class RunMlModel:
         nthreads     = int(argv[0])
         SI           = True
         rand_state   = 105
-
+        # os.chdir('/mnt/d/Lynker/FEMA_HECRAS/bankfull_W_D/deployment')
         # Load data
         dl_obj = dataloader.DataLoader(rand_state)
         dl_obj.readFiles()
@@ -163,7 +174,7 @@ class RunMlModel:
             if SI:
                 dl_obj.data[y_pred_label] = dl_obj.data[y_pred_label] * 0.3048
     
-        out_vars.append('comid')
+        out_vars.append('id')
         out_df = dl_obj.data[out_vars]
         out_df.to_parquet('data/ml_exports.parquet')
         print("\n ------------- ML estimates complete ----------- \n")
