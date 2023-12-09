@@ -69,7 +69,7 @@ class DPModel:
             - xgb
             - lgb
         
-        Example
+       ` Example
         --------
         >>> DPModel.loadData(out_feature = 'Y-bf', vote_flag = False, meta_flag = False,
                     best_flag = True, file = 'bf', model_type = 'xgb')
@@ -86,41 +86,62 @@ class DPModel:
             model = best_model = pickle.load(open('models/'+file+'_'+out_feature+'_'+model_type+'_final_Best_Model.pickle.dat', "rb"))
         
         # Extract feature names
-        if model_type == 'xgb':
-            feats = best_model.get_booster().feature_names
-        elif model_type == 'lgb':
-            feats = best_model.feature_name_
-        else:
-            feats = best_model.feature_name()
-        return model, feats
+        json_trans_path = 'model_space/trans_feats'+'_'+out_feature+"_"+'.json'
+        json_model_path = 'model_space/model_feats'+'_'+out_feature+'_'+'.json'
+
+        # Read the JSON file and convert its contents into a Python list
+        with open(json_trans_path, 'r') as json_file:
+            trans_list = json.load(json_file)
+        with open(json_model_path, 'r') as json_file:
+            model_list = json.load(json_file)
+
+        # Function to reconstruct the original list from the serialized format
+        def restore_order(item):
+            return item['value']
+
+        # Reconstruct the original list while preserving the order
+        trans_feats = [restore_order(item) for item in trans_list]
+        model_feats = [restore_order(item) for item in model_list]
+ 
+        return model, trans_feats, model_feats
     
     def process_target(self, dl_obj, target_name: str, vote_flag: bool=False, meta_flag: bool=False, 
                         best_flag: bool=True, file: str='bf', model_type: str='xgb') -> Tuple[str, np.array]:
         
-        dl_obj.addExtraFeatures(target_name)
-        dl_obj.buildPCA(target_name)
+        # dl_obj.addExtraFeatures(target_name) # already included in data
         
         if target_name == 'Y_bf':
-            model_type = 'xgb'
+            model_type = 'rf'
+            x_transform = False
+            y_transform = False
         elif target_name == 'Y_in':
-            model_type = 'lgb'
+            model_type = 'rf'
+            x_transform = False
+            y_transform = False
         elif target_name == 'TW_bf':
-            model_type = 'xgb'
+            model_type = 'rf'
+            x_transform = False
+            y_transform = False
         else:
-            model_type = 'lgb'
-        # if target_name.startswith("Y"):
-        #     model_type = 'xgb'
-        # else:
-        #     model_type = 'lgb'
+            model_type = 'rf'
+            x_transform = True
+            y_transform = True
 
-        model, feats = self.loadModel(target_name, vote_flag=False, meta_flag=False, best_flag=True, file='bf', model_type=model_type)
+        model, trans_feats, model_feats = self.loadModel(target_name, vote_flag=False, meta_flag=False, 
+                                      best_flag=True, file='light_notrans_35', model_type=model_type)
 
-        data_in = dl_obj.data[feats]
+        dl_obj.transformXData(out_feature=target_name, trans_feats=trans_feats,
+                                t_type='power', x_transform=x_transform)
+        data_in = dl_obj.buildPCA(target_name)
+
         y_pred_label = 'owp_' + target_name
         if target_name.endswith("in"):
             y_pred_label = y_pred_label+'chan'
         y_pred_label = y_pred_label.lower()
+        data_in = data_in[model_feats] # [model.feature_names_in_]# [model_feats]
         preds_all = model.predict(data_in)
+        preds_all = dl_obj.transformYData(out_feature=target_name, data=preds_all, t_type='power', 
+                                           y_transform=y_transform)
         
         return y_pred_label, preds_all
 
@@ -139,7 +160,8 @@ class RunMlModel:
         nthreads     = int(argv[0])
         SI           = True
         rand_state   = 105
-        # os.chdir('/mnt/d/Lynker/FEMA_HECRAS/bankfull_W_D/deployment')
+        #os.chdir('/mnt/d/Lynker/FEMA_HECRAS/bankfull_W_D/deployment')
+
         # Load data
         dl_obj = dataloader.DataLoader(rand_state)
         dl_obj.readFiles()
@@ -160,6 +182,8 @@ class RunMlModel:
         log_y_t     = True
         
         deploy_obj = DPModel(rand_state)
+        
+        results = []
 
         # Parallelize the for loop
         results = Parallel(n_jobs=nthreads, backend="multiprocessing")(delayed(deploy_obj.process_target)(dl_obj, target_name, vote_flag, meta_flag, best_flag, file, model_type) for target_name in tqdm(target_list))

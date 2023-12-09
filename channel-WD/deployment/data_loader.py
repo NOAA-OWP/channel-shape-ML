@@ -6,6 +6,8 @@ import os
 import json
 import re
 import fnmatch
+from sklearn.preprocessing import PowerTransformer, QuantileTransformer, StandardScaler, RobustScaler, MinMaxScaler, MaxAbsScaler, FunctionTransformer
+
 
 # Custom dataset
 # --------------------------- Read data files --------------------------- #
@@ -23,7 +25,7 @@ class DataLoader:
     >>> DataLoader(rand_state = 105, data_path = 'data/input.parquet')
         
     """
-    def __init__(self, rand_state: int, data_path: str = 'data/input.parquet') -> None:
+    def __init__(self, rand_state: int, data_path: str = 'data/nwm_conus_input.parquet') -> None:
         pd.options.display.max_columns  = 60
         self.data_path                  = data_path
         self.data                       = pd.DataFrame([])
@@ -43,10 +45,24 @@ class DataLoader:
         """
         try:
             self.data = pd.read_parquet(self.data_path, engine='pyarrow')
+            self.data = self.data.head(100)
         except:
-            print('Wrong address or data format. Please use parquet file.')
+            print('Wrong address or data format. Please use correct parquet file.')
+        
+        self.data = self.data[set(self.data.columns.to_list()) - set(['geometry','NHDFlowline','full_cats',
+                                                                      'gridcode','number_unique_peaks','non_zero_years',
+                                                                      'toCOMID','Hydroseq','RPUID','FromNode',
+                                                                      'ToNode','VPUID','hy_cats','geometry_poly',
+                                                                      'REACHCODE','sourcefc','comid','FEATUREID'])]
+        # Find string columns (debug)
+        # string_columns = []
+        # # Iterate through each column and check if it contains string values
+        # for col in self.data.columns:
+        #     if self.data[col].dtype == 'O':  # 'O' represents object type (strings) in Pandas
+        #         string_columns.append(col)  
+        # print(string_columns)
         return
-    
+
     # --------------------------- Add Binary Features --------------------------- #
     def addExtraFeatures(self, target_name: str) -> None:
         # Add VAA dummy
@@ -122,8 +138,101 @@ class DataLoader:
             pca =  pickle.load(open(pca_item, "rb"))
             temp_data = self.data[temp.get(text[1:-1])]
             new_data_pca = pca.transform(temp_data)
-            for i in range(0, 5, 1):
+            max_n = min(5, len(temp.get(text[1:-1])))
+            for i in range(0, max_n, 1):
                 self.data[str(text[1:-1])+"_"+str(i)] = new_data_pca[:, i]
 
+        return self.data
+    
+    # --------------------------- Data transformation --------------------------- #     
+    # Input and output transformation
+    def transformXData(self, out_feature: str, trans_feats : list,
+                        t_type: str = 'power', x_transform: bool = False)  -> pd.DataFrame:
+        """ Apply scaling and normalization to data
+        
+        Parameters:
+        ----------
+        variable: str
+            A string of target variable to be transformed
+
+        Returns:
+        ----------
+
+        """
+        print('transforming and plotting ...')
+        self.data.reset_index(drop=True)
+        trans_data = self.data[trans_feats]
+
+        # Always perform transformation on PCA
+        in_features = self.data.columns.tolist()
+        in_feats = set(in_features) - set(trans_feats)
+
+        if t_type!='log':
+            trans =  pickle.load(open('models/train_x_'+out_feature+'_tansformation.pkl', "rb"))
+            min_max_scaler = pickle.load(open('models/train_x_'+out_feature+'_scaler_tansformation.pkl', "rb"))
+            scaler_data = min_max_scaler.transform(trans_data)
+            data_transformed = trans.transform(scaler_data)
+            data_transformed = pd.DataFrame(data_transformed, columns=trans_data.columns)
+            if not x_transform:
+                self.data = pd.concat([data_transformed, self.data[in_feats]], axis=1)
+            else:
+                self.data = data_transformed.copy()
+        else:
+            # Replace NA and inf
+            self.data = np.log(np.abs(self.data)).fillna(0)
+            self.data.replace([np.inf, -np.inf], -100, inplace=True)
+
+        # Tests
+        is_inf_data = self.data.isin([np.inf, -np.inf]).any().any()
+        if is_inf_data:
+            print('---- found inf in X {0} !!!!'.format(out_feature))
+        has_missing_data  = self.data.isna().any().any()
+        if has_missing_data:
+            print('---- found nan in X {0} !!!!'.format(out_feature))
+
         return 
+    
+    def transformYData(self, out_feature, data, t_type: str = 'power', y_transform: bool = False)  -> np.array:
+        """ Builds a PCA and extracts new dimensions
+        
+        Parameters:
+        ----------
+        variable: str
+            A string of target variable to be transformed
+
+        Returns:
+        ----------
+
+        """
+        print('transforming and plotting ...')
+
+        if y_transform:
+            if t_type!='log':
+                def applyScalerY(arr):
+                    min_max_scaler = pickle.load(open('models/train_y_'+out_feature+'_scaler_tansformation.pkl', "rb"))
+                    # min_max_scaler = pickle.load(open('/mnt/d/Lynker/R2_out/New/'+folder+'/conus-fhg/'+file+'/model/'+'train_'+arr.name+'_scaled.pkl', "rb"))
+                    data_minmax = min_max_scaler.transform(arr.values.reshape(-1, 1))
+                    return data_minmax.flatten()
+                
+                trans =  pickle.load(open('models/train_y_'+out_feature+'_tansformation.pkl', "rb"))
+                #scaler_data = data.apply(applyScalerY)
+                data = trans.transform(data)
+
+            else:
+                # Replace NA and inf
+                data = np.log(np.abs(data)).fillna(0)
+                data.replace([np.inf, -np.inf], -100, inplace=True)
+
+        print('--------------- End of Y transformation ---------------')
+        
+        # Tests
+        is_inf_y = np.isinf(data).any()
+        if is_inf_y:
+            print('---- found inf in Y {0} !!!!'.format(out_feature))
+        
+        has_missing_y = np.isnan(data).any()
+        if has_missing_y:
+            print('---- found nan in Y {0} !!!!'.format(out_feature))
+
+        return data
         

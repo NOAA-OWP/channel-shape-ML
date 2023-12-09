@@ -1,0 +1,248 @@
+[
+    {
+        "value": "rp_5"
+    },
+    {
+        "value": "rp_10"
+    },
+    {
+        "value": "rp_15"
+    },
+    {
+        "value": "rp_25"
+    },
+    {
+        "value": "rp_35"
+    },
+    {
+        "value": "rp_50"
+    },
+    {
+        "value": "rp_60"
+    },
+    {
+        "value": "rp_75"
+    },
+    {
+        "value": "rp_85"
+    },
+    {
+        "value": "rp_90"
+    },
+    {
+        "value": "rp_95"
+    },
+    {
+        "value": "rp_98"
+    },
+    {
+        "value": "rp_99"
+    },
+    {
+        "value": "rp_100"
+    },
+    {
+        "value": "rp_200"
+    },
+    {
+        "value": "rp_500"
+    },
+    {
+        "value": "rp_1000"
+    },
+    {
+        "value": "WaterInputWs"
+    },
+    {
+        "value": "PctConif2011Ws"
+    },
+    {
+        "value": "PctCrop2011Ws"
+    },
+    {
+        "value": "PctDecid2011Ws"
+    },
+    {
+        "value": "PctGrs2011Ws"
+    },
+    {
+        "value": "PctHay2011Ws"
+    },
+    {
+        "value": "PctMxFst2011Ws"
+    },
+    {
+        "value": "PctShrb2011Ws"
+    },
+    {
+        "value": "PctUrbHi2011Ws"
+    },
+    {
+        "value": "PctUrbLo2011Ws"
+    },
+    {
+        "value": "PctUrbMd2011Ws"
+    },
+    {
+        "value": "PctUrbOp2011Ws"
+    },
+    {
+        "value": "Fe2O3Ws"
+    },
+    {
+        "value": "HydrlCondWs"
+    },
+    {
+        "value": "CompStrgthWs"
+    },
+    {
+        "value": "PctAlluvCoastWs"
+    },
+    {
+        "value": "PctCarbResidWs"
+    },
+    {
+        "value": "PctColluvSedWs"
+    },
+    {
+        "value": "PctGlacLakeCrsWs"
+    },
+    {
+        "value": "PctGlacLakeFineWs"
+    },
+    {
+        "value": "PctGlacTilClayWs"
+    },
+    {
+        "value": "PctGlacTilCrsWs"
+    },
+    {
+        "value": "PctGlacTilLoamWs"
+    },
+    {
+        "value": "PctNonCarbResidWs"
+    },
+    {
+        "value": "PctSilicicWs"
+    },
+    {
+        "value": "alpha_mean_0_5_r250"
+    },
+    {
+        "value": "clay_mean_0_5_r250"
+    },
+    {
+        "value": "hb_mean_0_5_r250"
+    },
+    {
+        "value": "ksat_mean_0_5_r250"
+    },
+    {
+        "value": "lambda_mean_0_5_r250"
+    },
+    {
+        "value": "n_mean_0_5_r250"
+    },
+    {
+        "value": "om_mean_0_5_r250"
+    },
+    {
+        "value": "ph_mean_0_5_r250"
+    },
+    {
+        "value": "sand_mean_0_5_r250"
+    },
+    {
+        "value": "silt_mean_0_5_r250"
+    },
+    {
+        "value": "theta_r_mean_0_5_r250"
+    },
+    {
+        "value": "theta_s_mean_0_5_r250"
+    },
+    {
+        "value": "FertWs"
+    },
+    {
+        "value": "ManureWs"
+    },
+    {
+        "value": "AgKffactWs"
+    },
+    {
+        "value": "CanalDensWs"
+    },
+    {
+        "value": "HUDen2010Ws"
+    },
+    {
+        "value": "PopDen2010Ws"
+    },
+    {
+        "value": "RdCrsWs"
+    },
+    {
+        "value": "RdCrsSlpWtdWs"
+    },
+    {
+        "value": "RdDensWs"
+    },
+    {
+        "value": "DamDensWs"
+    },
+    {
+        "value": "DamNIDStorWs"
+    },
+    {
+        "value": "DamNrmStorWs"
+    },
+    {
+        "value": "elevation_ave"
+    },
+    {
+        "value": "long"
+    },
+    {
+        "value": "lat"
+    },
+    {
+        "value": "aet"
+    },
+    {
+        "value": "DIVISION_encode"
+    },
+    {
+        "value": "PROVINCE_encode"
+    },
+    {
+        "value": "def"
+    },
+    {
+        "value": "PDSI"
+    },
+    {
+        "value": "pet"
+    },
+    {
+        "value": "ppt"
+    },
+    {
+        "value": "soil"
+    },
+    {
+        "value": "HLR"
+    },
+    {
+        "value": "WetIndexWs"
+    },
+    {
+        "value": "PctWdWet2011Ws"
+    },
+    {
+        "value": "LENGTHKM"
+    },
+    {
+        "value": "slopelenkm"
+    }
+]
