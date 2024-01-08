@@ -37,6 +37,10 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
+# Folders #
+##################
+channel-WD/deployment/New folder/*
+
 # Vim swap files #
 ##################
 *.swp
