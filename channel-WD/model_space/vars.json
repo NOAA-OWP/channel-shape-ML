@@ -1,0 +1,84 @@
+{
+    {
+        "Dataset": "ERA5",
+        "Aggregation": "annual sum ",
+        "Description": "ERA5-Land Monthly Aggregated - ECMWF Climate Reanalysis",
+        "Link": "https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_MONTHLY_AGGR",
+        "Bands": ["snowmelt_sum","snowfall_sum","surface_runoff_sum","sub_surface_runoff_sum","snow_depth_water_equivalent"]
+    },
+       
+    :[
+        "ERA5-Land Monthly Aggregated - ECMWF Climate Reanalysis",
+        "snowmelt_sum",
+        "snowfall_sum",
+        "surface_runoff_sum",
+        "sub_surface_runoff_sum",
+        "snow_depth_water_equivalent"
+        ],
+
+
+    ]
+    "LAI_ave",
+    "LAI_max",
+    "LAI_min",
+    "NDVI_ave",
+    "NDVI_max",
+    "NDVI_min"
+    
+        "Q_mean",
+        "Qb_max",
+        "Qb_mean",
+        "Qb_min",
+        "sub_surface_runoff",
+        "surface_runoff",
+        "RunoffCat",
+        "scat_dummy"
+    ],
+    "Soil_temp_moist_pc": [
+        "SM_ave",
+        "SM_max",
+        "SM_min",
+        "ST_ave",
+        "ST_max",
+        "ST_min"
+    ],
+    "Soil_char_pc": [
+        "bd",
+        "clay",
+        "hb",
+        "ksat",
+        "lambda",
+        "landforms",
+        "lithology",
+        "n",
+        "om",
+        "ph",
+        "sand",
+        "silt",
+        "theta_r",
+        "theta_s",
+        "CompStrgthCat",
+        "HydrlCondCat",
+        "K2OCat",
+        "scat_dummy"
+    ],
+    "Preciep_pc": [
+        "AI",
+        "pdsi",
+        "Precip_ave",
+        "Precip_max",
+        "Precip_min",
+        "scat_dummy"
+    ],
+    "Topo_pc": [
+        "CHILI",
+        "PhyD",
+        "Phy_ave",
+        "Phy_std",
+        "aspect",
+        "def",
+        "elevation_ave",
+        "facc",
+        "mTPI_ave",
+        "mTPI_std",
+        "topo"
