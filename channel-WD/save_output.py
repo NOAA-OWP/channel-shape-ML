@@ -44,6 +44,7 @@ class SaveOutput:
     def __init__(self, train_id: pd.DataFrame, eval_id: pd.DataFrame,
                  test_id: pd.DataFrame, out_feature: str, custom_name: str,
                  x_train: pd.DataFrame, x_eval: pd.DataFrame, test_x: pd.DataFrame,
+                 train_columns: list, m_x_train: pd.DataFrame, m_x_eval: pd.DataFrame, m_x_test: pd.DataFrame,
                  y_train: np.array, y_eval: np.array, test_y: np.array,
                  target_data_path: str, best_model: str, loaded_model: any, 
                  x_transform: bool, y_transform: bool, t_type: str, SI: bool) -> None:
@@ -56,6 +57,10 @@ class SaveOutput:
         self.x_train                = x_train
         self.x_eval                 = x_eval
         self.test_x                 = test_x
+        self.train_columns          = train_columns
+        self.m_x_train              = m_x_train
+        self.m_x_eval               = m_x_eval
+        self.m_x_test               = m_x_test
         self.y_train                = y_train
         self.y_eval                 = y_eval
         self.test_y                 = test_y
@@ -77,10 +82,21 @@ class SaveOutput:
         A preprocessing step
         """
         # data transformation ----------------------------------------
-        self.predictions_train = self.loaded_model.predict(self.x_train)
-        self.predictions_valid = self.loaded_model.predict(self.x_eval)
-        self.predictions_test = self.loaded_model.predict(self.test_x)
+        # min_length = min(len(self.loaded_model.feature_names_in_), len(self.train_columns))
 
+        # # Print values side by side
+        # for i in range(min_length):
+        #     print(f'{self.loaded_model.feature_names_in_[i]}  {self.train_columns[i]}')
+
+        self.predictions_train = self.loaded_model.predict(self.m_x_train)
+        self.predictions_valid = self.loaded_model.predict(self.m_x_eval)
+        self.predictions_test = self.loaded_model.predict(self.m_x_test)
+
+        pc_columns = [col for col in self.x_train.columns if '_pc' in col]
+        pc_columns = pc_columns + ["R2", "siteID"]
+        self.x_train = self.x_train.drop(columns=pc_columns, axis=1)
+        self.x_eval = self.x_eval.drop(columns=pc_columns, axis=1)
+        self.test_x = self.test_x.drop(columns=pc_columns, axis=1)
         # self.predictions_train_orig = self.predictions_train.copy()
         # self.predictions_valid_orig = self.predictions_valid.copy()
         # self.predictions_test_orig = self.predictions_test.copy()
@@ -105,23 +121,23 @@ class SaveOutput:
                 self.y_eval = np.exp(self.y_eval)
                 self.test_y = np.exp(self.test_y)
 
-        if self.x_trans:
-            if self.t_type != 'log':
-                t_x = pickle.load(open(self.custom_name+'/model/'+'train_x_'+self.out_feature+'_tansformation.pkl', "rb"))
-                col_names = self.x_train.columns
-                self.x_train = t_x.inverse_transform(self.x_train)
-                self.x_train = pd.DataFrame(data=self.x_train,
-                                        columns=col_names).reset_index(drop=True)
-                self.x_eval = t_x.inverse_transform(self.x_eval)
-                self.x_eval = pd.DataFrame(data=self.x_eval,
-                                        columns=col_names).reset_index(drop=True)
-                self.test_x = t_x.inverse_transform(self.test_x)
-                self.test_x = pd.DataFrame(data=self.test_x,
-                                            columns=col_names).reset_index(drop=True)
-            else:
-                self.x_train = np.exp(self.x_train)
-                self.x_eval = np.exp(self.x_eval)
-                self.test_x = np.exp(self.test_x)
+        # if self.x_trans:
+        #     if self.t_type != 'log':
+        #         t_x = pickle.load(open(self.custom_name+'/model/'+'train_x_'+self.out_feature+'_tansformation.pkl', "rb"))
+        #         col_names = self.x_train.columns
+        #         self.x_train = t_x.inverse_transform(self.x_train)
+        #         self.x_train = pd.DataFrame(data=self.x_train,
+        #                                 columns=col_names).reset_index(drop=True)
+        #         self.x_eval = t_x.inverse_transform(self.x_eval)
+        #         self.x_eval = pd.DataFrame(data=self.x_eval,
+        #                                 columns=col_names).reset_index(drop=True)
+        #         self.test_x = t_x.inverse_transform(self.test_x)
+        #         self.test_x = pd.DataFrame(data=self.test_x,
+        #                                     columns=col_names).reset_index(drop=True)
+        #     else:
+        #         self.x_train = np.exp(self.x_train)
+        #         self.x_eval = np.exp(self.x_eval)
+        #         self.test_x = np.exp(self.test_x)
 
         # ___________________________________________________
         # Build complete dataframe
@@ -149,8 +165,13 @@ class SaveOutput:
 
         data_attr = pd.read_parquet(self.target_data_path, engine='pyarrow')
         data_attr.astype({'siteID': 'string'})
-        list_attr = list(set(data_attr.columns.to_list()) - set(['lat', 'long']))
-        data_attr = data_attr[list_attr]
+        #list_attr = list(set(data_attr.columns.to_list()) - set(['lat', 'long']))
+        #data_attr = data_attr[list_attr]
+        if self.out_feature.startswith("Y"):
+
+            data_attr = data_attr[['siteID','Count','coe','exp','R2','Y_bf','Y_in']]
+        else:
+            data_attr = data_attr[['siteID','Count','coe','exp','R2','TW_bf','TW_in']]
 
         self.merged_data = self.merged_data.merge(data_attr, on='siteID', how='inner')
 
@@ -185,6 +206,7 @@ class SaveOutput:
         
         # ___________________________________________________
         # Save dataframe
+        self.merged_data = self.merged_data.loc[:, ~self.merged_data.columns.duplicated()]
         self.merged_data.to_parquet(self.custom_name+'/metrics/'+str(self.custom_name)+'_'+self.best_model+'_'+self.out_feature+'.parquet')
         print("\n __________________ Saved _________________________ \n")
         return
