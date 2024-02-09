@@ -64,18 +64,18 @@ class MlModel:
         self.grid_searches             = {}
         temp                           = json.load(open('data/model_feature_names.json'))
         self.target_data_path          = ""
-        self.train_x                   = 0 
+        self.train_x                   = pd.DataFrame([])
         self.train_y                   = 0 
         self.train_id                  = 0 
-        self.test_x                    = 0
+        self.test_x                    = pd.DataFrame([])
         self.test_y                    = 0
         self.test_id                   = 0
-       
         self.train_sub_id              = 0 
         self.x_train                   = 0 
         self.eval_id                   = 0 
         self.x_eval                    = 0
-
+        self.train_x_comp              = pd.DataFrame([])
+        self.test_x_comp               = pd.DataFrame([])
         # ___________________________________________________
         # Free memory
         del temp
@@ -95,10 +95,11 @@ class MlModel:
         if not os.path.isdir(os.path.join(os.getcwd(),'cache/')):
             os.mkdir(os.path.join(os.getcwd(),'cache/'))
         
-# --------------------------- Load train and test data files --------------------------- #    
+    # --------------------------- Load train and test data files --------------------------- #    
     def loadData(self, out_feature: str, x_transform: bool = False, 
                  y_transform: bool = False, R2_thresh: float = 0.0, count_thresh: int = 3,
-                 sample_type: str = "All", pci: bool = True, t_type: str = 'log') -> None:
+                 sample_type: str = "All", pca: bool = True, t_type: str = 'log',
+                 train_type: str = "NWIS", sub_trans: bool = True) -> None:
         """ Load the data and apply data filtering, transformation and 
         feature selection if nessassery
 
@@ -128,7 +129,7 @@ class MlModel:
             - "All": for considering all features
             - "Sub": for considering pre selected features
             - "test": a test case for unit testing
-        pci: bool
+        pca: bool
             Whether to apply PCA or not 
             Opptions are:
             - True
@@ -139,37 +140,51 @@ class MlModel:
             - log
             - power
             - quant
+        train_type: str
+            type of model training
+            Opptions are:
+            - NWIS
+            - NWM
+        sub_trans: bool
+            apply trans only to pca
+            - True
+            - False
         
         Example
         --------
         >>> MlModel.loadData(out_feature = 'b', x_transform = False, 
                  y_transform = False, R2_thresh = 0.0,
-                 sample_type = "Sub", pci = False, t_type = 'log')
+                 sample_type = "Sub", pca = False, t_type = 'log', 
+                 train_type = 'NWM', sub_trans = True)
         """
         # Bulid an instance of DataLoader object
-
-        if "TW_" in out_feature:
-            data_path = 'data/width_predictor_test.parquet'
-            self.target_data_path = 'data/width_target.parquet'
-        else:
-            data_path = 'data/depth_mean_predictor_test.parquet'
-            self.target_data_path = 'data/depth_mean_target.parquet'
+        data_path = ''
+        if train_type == "NWIS" and "TW_" in out_feature:
+            data_path = self.target_data_path = 'data/nwis_width_pred_tar.parquet'
+        elif train_type == "NWIS" and "Y_" in out_feature:
+            data_path = self.target_data_path = 'data/nwis_depth_pred_tar.parquet'
+        elif train_type == "NWM" and "TW_" in out_feature:
+            data_path = self.target_data_path = 'data/nwm_width_pred_tar.parquet'
+        elif train_type == "NWM" and "Y_" in out_feature:
+            data_path = self.target_data_path = 'data/nwm_depth_pred_tar.parquet'
 
         data_loader = dataloader.DataLoader(data_path=data_path,
                                             target_data_path=self.target_data_path,
                                             rand_state=self.rand_state, 
-                                            # in_features=self.in_features, 
                                             out_feature=out_feature, 
                                             custom_name=self.custom_name, 
                                             x_transform=x_transform, y_transform=y_transform,
-                                            R2_thresh=R2_thresh, count_thresh=count_thresh) 
+                                            R2_thresh=R2_thresh, count_thresh=count_thresh,
+                                            sample_type=sample_type, train_type=train_type) 
         data_loader.readFiles()
-        if pci:
-            data_loader.reduceDim()
-        data_loader.splitData(sample_type=sample_type)
-        self.train_x, self.train_y, self.train_id, self.test_x, self.test_y, self.test_id = data_loader.transformData(t_type=t_type, plot_dist=False)
-
-# --------------------------- Grid Search --------------------------- #
+        data_loader.splitData()
+        self.train_x, self.train_y, self.train_id, self.test_x, self.test_y, self.test_id = data_loader.transformData(t_type=t_type, sub_trans=sub_trans, plot_dist=False)
+        if pca:
+            self.train_x, self.test_x, self.train_x_comp, self.test_x_comp = data_loader.reduceDim(self.train_x, self.test_x)
+            self.train_x_comp = pd.concat([self.train_x_comp, self.train_id], axis=1) 
+            self.test_x_comp = pd.concat([self.test_x_comp, self.test_id], axis=1) 
+    
+    # --------------------------- Grid Search --------------------------- #
     def findBestParams(self, out_features: str = 'TW_bf', nthreads: int = -1, space: str = 'actual_space',
                         weighted: bool = False) -> Tuple[str, dict, pd.DataFrame]:
         """ Find the best parameters of the all ML models through k-fold
