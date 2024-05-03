@@ -132,11 +132,12 @@ class DPModel:
 
         dl_obj.transformXData(out_feature=target_name, trans_feats=trans_feats,
                                 t_type='power', x_transform=x_transform)
-        # # has_missing_y = np.isnan(dl_obj.data).any()
-        # rows_with_nan = dl_obj.data[dl_obj.data.isnull().any(axis=1)]
-        # # if has_missing_y:
-        # print("Part2 Rows with NaN values:")
-        # print(rows_with_nan)
+        # has_missing_y = np.isnan(dl_obj.data).any()
+        rows_with_nan = dl_obj.data[dl_obj.data.isnull().any(axis=1)]
+        # if has_missing_y:
+        print("Part2 Rows with NaN values:")
+        print(rows_with_nan)
+
         data_in = dl_obj.buildPCA(target_name)
 
         y_pred_label = 'owp_' + target_name
@@ -149,7 +150,14 @@ class DPModel:
                                            y_transform=y_transform)
         
         return y_pred_label, preds_all
+    
+    def checkBounds(self, df):
+        mask = df['owp_tw_inchan'] > df['owp_tw_bf']
+        df.loc[mask, ['owp_tw_bf', 'owp_tw_inchan']] = df.loc[mask, ['owp_tw_inchan', 'owp_tw_bf']].values
 
+        mask = df['owp_y_inchan'] > df['owp_y_bf']
+        df.loc[mask, ['owp_y_bf', 'owp_y_inchan']] = df.loc[mask, ['owp_y_inchan', 'owp_y_bf']].values
+        return df
 
 # --------------------------- A driver class --------------------------- #           
 class RunDeploy:
@@ -165,11 +173,13 @@ class RunDeploy:
         nthreads     = int(argv[0])
         SI           = True
         rand_state   = 105
-        # os.chdir('/mnt/d/Lynker/FEMA_HECRAS/bankfull_W_D/deployment')
+        os.chdir('/mnt/d/Lynker/FEMA_HECRAS/bankfull_W_D/deployment')
 
         # Load data
+        start = 2500000#2500000
+        end = 2647455#2647455
         dl_obj = dataloader.DataLoader(rand_state)
-        dl_obj.readFiles()
+        dl_obj.readFiles(start, end)
         dl_obj.imputeData()
 
         # Load targets
@@ -205,9 +215,8 @@ class RunDeploy:
     
         out_vars.append('FEATUREID')
         out_df = dl_obj.data[out_vars]
-        out_df.loc[out_df['owp_tw_inchan'] > out_df['owp_tw_bf'], 'owp_tw_inchan'] = out_df['owp_tw_bf']
-        out_df.loc[out_df['owp_y_inchan'] > out_df['owp_y_bf'], 'owp_y_inchan'] = out_df['owp_y_bf']
-        out_df.to_parquet('data/ml_exports2647454.parquet')
+        out_df = deploy_obj.checkBounds(out_df)
+        out_df.to_parquet('data/new_exports'+str(end)+'.parquet')
         print("\n ------------- ML estimates complete ----------- \n")
         return
 
