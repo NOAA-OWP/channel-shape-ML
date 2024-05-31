@@ -1,27 +1,26 @@
 #!/bin/bash
 # Conda
-# my directory source /home/amodaresirad/miniconda3/etc/profile.d/conda.sh
-#Account and Email Information
-#SBATCH -A amodaresirad ## User ID
-#SBATCH --mail-type=end
-#SBATCH --mail-user=arashmodaresirad@u.boisestate.edu
+# source /home/arashmod/miniconda3/etc/profile.d/conda.sh
 
-#SBATCH -J quant       # job name
-#SBATCH -o outputs/quant_results_final.o%j # output and error file name (%j expands to jobID)
-#SBATCH -e outputs/quant_errors_final.e%j
-#SBATCH -n 2               # Run one process
-#SBATCH --cpus-per-task=28 # allow job to multithread across all cores
-#SBATCH -t 40-00:00:00      # run time (d-hh:mm:ss)
 ulimit -v unlimited
 ulimit -s unlimited
 ulimit -u 10000
 
-if [ ! -d /home/amodaresirad/River_new/bf/bankfull_W_D/outputs ]; then
-    echo "outputs floder not found, creating one..."
-    mkdir -p /home/amodaresirad/River_new/bf/bankfull_W_D/outputs;
+# Get the current working directory
+current_dir=$(pwd)
+# Define the relative path to the outputs folder
+relative_path="/outputs"
+# Construct the full path
+output_path="${current_dir}${relative_path}"
+
+if [ ! -d "$output_path" ]; then
+    echo "outputs folder not found, creating one..."
+    mkdir -p "$output_path"
 fi
 
-source /home/amodaresirad/anaconda3/etc/profile.d/conda.sh
+anaconda_base=$(conda info --base)
+anaconda_base="${anaconda_base}/etc/profile.d/conda.sh"
+source "$anaconda_base"
 
 conda activate base
 
