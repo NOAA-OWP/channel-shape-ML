@@ -575,12 +575,16 @@ class DataLoader:
         # Save the list to a JSON file
         with open('model_space/trans_feats'+'_'+self.out_feature+"_"+'.json', 'w') as json_file:
             json.dump(serialized_list, json_file, indent=4)
+        
+        # Mandetory transformation for PCA    
         min_value = 0
         max_value = 500
         scaler = MinMaxScaler(feature_range=(min_value, max_value))
         if t_type=='power':
             # t_x = MinMaxScaler(feature_range=(0, 1))
             t_x = PowerTransformer()
+        if t_type=='s_scaler':
+            t_x = StandardScaler()
         if t_type=='quant':
             t_x = QuantileTransformer(
                 n_quantiles=500, output_distribution="normal", 
@@ -644,6 +648,8 @@ class DataLoader:
                     n_quantiles=500, output_distribution="normal", 
                     random_state=self.rand_state
                 )
+            if t_type=='s_scaler':
+                t_y = StandardScaler()
             if t_type!='log':
                 # scaler_y = StandardScaler()
                 train_y = self.train[[self.out_feature]].reset_index(drop=True)
