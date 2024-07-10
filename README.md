@@ -137,7 +137,7 @@ Where:
 
 ## Getting involved
 
-NOAA's National Water Center welcomes anyone to contribute to the 3D Hydrofabric repository to enhance OWP's FIM and NextGen capabilities. Please contact Alemayehu Midekisa (alemayehu.midekisa@noaa.gov) or Fernando Salas (fernando.salas@noaa.gov) to get started.
+NOAA's National Water Center welcomes anyone to contribute to the 3D Hydrofabric repository to enhance OWP's FIM and NextGen capabilities. Please contact Mike Johnson (mike.johnson@noaa.gov) or Fernando Salas (fernando.salas@noaa.gov) to get started.
 
 ----
 
