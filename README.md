@@ -355,8 +355,7 @@ This repository is a scientific product and is not official communication of the
 
 ## 10. References and Citations
 
-1. Dingman, S. L. (2007). Analytical derivation of at-a-station hydraulic-geometry relations. Journal of Hydrology, 334(1-2), 17-27. https://doi.org/10.1016/j.jhydrol.2006.10.033
-2. Leopold, L. B., and Maddock, T. (1953). The hydraulic geometry of stream channels and some physiographic implications. US Geological Survey Professional Paper, 252. https://doi.org/10.3133/pp252
+1. Dingman, S. L. (2007). Analytical derivation of at-a-station hydraulic–geometry relations. Journal of Hydrology, 334(1-2), 17-27.
+2. Leopold, L. B., & Maddock, T. (1953). The hydraulic geometry of stream channels and some physiographic implications (Vol. 252). US Government Printing Office.
 3. Modaresi Rad, A., Johnson, J. M., Ghahremani, Z., Coll, J., & Frazier, N. (2024). Enhancing river channel dimension estimation: A machine learning approach leveraging the National Water Model, hydrographic networks, and landscape characteristics. Journal of Geophysical Research: Machine Learning and Computation, 1(4), e2024JH000173.
-4. Lin, P., et al. (2020). High-resolution global channel geometry and its impact on hydrodynamics. Geophysical Research Letters, 47(11), e2019GL086405.
-5. Blackburn-Lynch, W., et al. (2017). Development of regional hydraulic geometry curves for the National Water Model. JAWRA, 53(4), 903-918.
+4. Blackburn‐Lynch W, Agouridis CT, Barton CD. Development of regional curves for hydrologic landscape regions (HLR) in the contiguous United States. JAWRA Journal of the American Water Resources Association. 2017 Aug;53(4):903-28.
