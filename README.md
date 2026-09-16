@@ -283,39 +283,27 @@ docker run --rm \
 ```
 ---
 
-## 6. Production Release Notes (v1.0.0)
+## 6. Release Notes (v2.0.0-alpha)
 
-<details>
-<summary><b>Production-Ready Release Notes (v1.0.0) (Click to expand)</b></summary>
+<details open>
+<summary><b>Release Notes: v2.0.0-alpha Milestone (Click to collapse)</b></summary>
 
-### Motivation and Purpose
-The v1.0.0 release establishes an automated machine learning framework to estimate bankfull channel width, depth, and cross-sectional shape across CONUS, addressing the missing bathymetry data gap in DEMs for NextGen and FIM.
+### Motivation and Architectural Overview
+The v2.0.0-alpha release marks the first major milestone of the next-generation channel geometry and hydraulic roughness estimation framework (architecture #57, closes #58, PR #59). Developed in direct support of the Next Generation Water Modeling Framework (NextGen) and Flood Inundation Mapping (FIM), this milestone transitions the project from isolated single-target scripts to an integrated, high-performance sequential inference architecture.
 
-### Ingestion and Preprocessing
-* Ingestion of acoustic Doppler current profiler (ADCP) soundings from USGS HYDRoSWOT, cleaned with AHGestimation.
-* Feature extraction across more than 400 attributes.
-* Feature space reduction via RFE and autoencoders to 60 predictors.
+The v2 architecture is trained on comprehensive field soundings from USGS streamgages, HydroSWOT acoustic Doppler current profiler (ADCP) surveys, and MIP observations, using strictly hydrofabric topological attributes as predictors during inference extending its inference capability to OCONUS.
 
-### ML Architectures and Ensembles
-* Screening of 50 candidate algorithms with out-of-bag validation.
-* Hyperparameter optimization using grid and randomized search.
-* 3 deployment variants: Best Tuned Single Model, Voting Ensemble, and Stacking Meta-Learner.
-* Skew handling via Quantile Transformation and StandardScaler with invertible mappings.
-* Feature attribution diagnostics using XGBoost SHAP values.
+### Key Capabilities and Additions
+* **6-Stage Sequential DAG Engine**: Chains predictions across river networks in a physically constrained cascade: Bankfull Top Width (TW_bf_m) -> Bankfull Depth (Y_bf_m) -> Dingman Shape Exponent (r) -> Composite Manning's Roughness (n) -> In-Channel Roughness (n_in) -> Overbank Floodplain Roughness (n_out).
+* **Gaussian Markov Random Field (GMRF) Regularization**: Enforces downstream hydraulic monotonicity and spatial continuity along mainstem flowpaths, penalizing unphysical reach-to-reach numerical fluctuations across network connections.
+* **Decoupled Model Ingestion and S3 Cloud Streaming**: Supports loading model weights and ensembles directly from local filesystems or private Amazon S3 buckets (`s3://spatial-water-noaa/machine_learning/`) via `fsspec` and AWS IAM/SSO credentials, removing local disk staging overhead.
+* **Containerized Workflows**: Multi-platform Docker build specification, Docker Compose service definitions, and Conda environments (CPU and CUDA GPU acceleration) supporting local workstations, server instances, and cloud batch fleets.
+* **Preserved Baseline Continuity**: Baseline v1.0.0 training bash scripts and preprocessing utilities are safely preserved under `legacy/v1_baseline/` to guarantee scientific reproducibility while v2 training pipelines are built.
 
-### PR Changelog
-* Model fitting and quantile transformations (#8, #9)
-* HydroSWOT validation and geographic mapping (#11, #13)
-* Bankfull width and depth ML models (#17)
-* Feature importance diagnostics and output persistence (#24, #25)
-* Automated HydroSWOT and SCAT data extraction pipelines (#26, #27)
-* Conda environment setup for WD modeling (#28)
-* PCA groupings, attribute definitions, and hyperparameter search spaces (#29, #30, #31)
-* Automated deployment bash runners and execution modules (#35, #37, #38, #39, #41)
-* High-throughput batch processing and transformation inversion (#40, #49)
-* Data imputation routines and NWIS/NWM training target integration (#43, #46)
-* Deployment boundary verification and feature scaling (#50, #51)
-* Repository restructuring, license finalization, and cleanup (#54, #55, #56)
+### PR and Milestone Tracking
+* Transition to v2.0.0 High-Performance ML Architecture (#57)
+* Task: Implement 6-Stage Sequential DAG Inference Engine and GMRF Smoother (#58)
+* Feature Pull Request: Feature/v2 inference pipeline (#59)
 
 </details>
 
