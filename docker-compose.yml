@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  river-ml-inference:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: river_ml_pipeline:latest
+    container_name: river_ml_runner
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
+      - AWS_S3_MAX_CONCURRENT_REQUESTS=${AWS_S3_MAX_CONCURRENT_REQUESTS:-64}
+    volumes:
+      - ${HOST_DATA_DIR:-./data}:/app/data
+      - ${HOST_MODELS_DIR:-./models}:/app/models
+      - ${HOST_OUTPUTS_DIR:-./outputs}:/app/outputs
+    command: >
+      --flowlines_path=${FLOWLINES_PATH}
+      --slopes_path=${SLOPES_PATH}
+      --output_dir=${OUTPUT_DIR}
+      --save_model_path=${SAVE_MODEL_PATH}
+      --process_domain=${PROCESS_DOMAIN}
+      --chunk_size=${CHUNK_SIZE:-100000}
+      --lambda_reg=${LAMBDA_REG:-10.0}
+      --gamma_reg=${GAMMA_REG:-0.01}

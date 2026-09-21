@@ -1,155 +1,349 @@
-# ML channel geometry
+# Channel Bathymetry and Hydraulic Geometry ML Engine (channel-shape-ML)
 
-![maintenance-status](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
-![Keras](https://img.shields.io/badge/Keras-%23D00000.svg?style=for-the-badge&logo=Keras&logoColor=white)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
+[![Maintenance: Actively Developed](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)](https://github.com/NOAA-OWP/channel-shape-ML)
+[![Python: 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Integration: NextGen and FIM](https://img.shields.io/badge/Integration-NextGen%20%7C%20FIM-teal.svg)](https://water.noaa.gov/)
+[![Docker: Ready](https://img.shields.io/badge/Docker-Containerized-2496ED.svg?logo=docker&logoColor=white)](Dockerfile)
+[![Keras](https://img.shields.io/badge/Keras-%23D00000.svg?logo=keras&logoColor=white)](https://keras.io/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![XGBoost](https://img.shields.io/badge/XGBoost-%2315803D.svg?logo=xgboost&logoColor=white)](https://xgboost.readthedocs.io/)
 
+The NOAA Office of Water Prediction (OWP) automated machine learning framework for estimating bankfull channel width, depth, shape, and Manning's roughness across the Continental United States (CONUS). Developed in direct support of the Next Generation Water Modeling Framework (NextGen) and Flood Inundation Mapping (FIM).
 
-- [Repo](#Repository)
-  * [Cloning](#Cloning)
-- [Overview](#Overview)
-- [Data Model](#Data-Model)
-- [Width and Depth](#ML-Width-Depth)
-- [Shape](#ML-Channel-Shape)
-- [Getting involved](#Getting-involved)
-- [Open source licensing info](#Open-source-licensing-info)
+---
 
+## Table of Contents
+1. [Motivation and Scientific Background](#1-motivation-and-scientific-background)
+2. [Architectural Workflow: 6-Stage Sequential DAG](#2-architectural-workflow-6-stage-sequential-dag)
+3. [Input Datasets and Schema Requirements](#3-input-datasets-and-schema-requirements)
+4. [Master Consolidated Output Schema](#4-master-consolidated-output-schema)
+5. [Inference Pipeline Execution](#5-inference-pipeline-execution)
+   - [5.1 Environment Setup](#51-environment-setup)
+   - [5.2 CLI Inference Execution](#52-cli-inference-execution)
+   - [5.3 Docker Execution](#53-docker-execution)
+6. [Production Release Notes (v1.0.0)](#6-production-release-notes-v100)
+7. [Evolution and Development Roadmap](#7-evolution-and-development-roadmap)
+8. [Contributing and Code Standards](#8-contributing-and-code-standards)
+9. [Open Source Licensing and Disclaimer](#9-open-source-licensing-and-disclaimer)
+10. [References and Citations](#10-references-and-citations)
 
+---
 
+## 1. Motivation and Scientific Background
 
-## Repository
+Standard Digital Elevation Models (DEMs) cannot penetrate open water surfaces and map river channels as flat planes. This missing in-channel bathymetry causes large errors in river storage volume, channel conveyance capacity, flood wave routing velocity, and overbank inundation thresholds.
 
-This repository contains description of the Machine Learning (ML) data models for estimation of bankfull channel width, depth, and shape to be used in the development of the 3D hydrofabrics.
+`channel-shape-ML` predicts the missing channel geometry and hydraulic roughness across diverse hydrologic regions:
 
-[**Bankfull Width and Depth**](channel-WD/README.md)
+1. **Bankfull and In-Channel Dimensions**: Predicts channel width ($W$) and depth ($D$) associated with the 2-year flood recurrence interval and baseflows.
+2. **At-a-Station Functional Hydraulic Geometry (FHG)**: Estimates power-law parameters (Leopold and Maddock, 1953) constrained by physical continuity:
+   $$\text{Top Width: } TW = a \cdot Q^b$$
+   $$\text{Mean Depth: } Y = c \cdot Q^f$$
+   $$\text{Flow Velocity: } V = k \cdot Q^m$$
+   $$\text{Continuity Constraints: } a \cdot c \cdot k = 1.0, \quad b + f + m = 1.0$$
+3. **Cross-Sectional Shape Curvature Parameter ($r$)**: Analytically derives channel bed curvature using the Dingman (2007) cross-sectional power-law geometry:
+   $$Z(x) = Y_m^* \cdot \left(\frac{2}{W^*}\right)^r \cdot x^r, \quad 0 \le x \le \frac{W^*}{2}$$
+   - $r = 1.0$: Triangular bed.
+   - $r \approx 1.75$: Lane Type B stable regime channel.
+   - $r = 2.0$: Parabolic cross-section.
+   - $r > 2.5$: Rectangular bed with steep banks.
+4. **Manning's Roughness ($n$)**: Estimates overall channel roughness, in-channel roughness ($n_{in}$), and overbank roughness ($n_{out}$) with uncertainty control limits.
 
-[**Bankfull Shape**](channel-shape/README.md)
-  
-### Cloning
+These predictions improve upon regional empirical curves previously used in National Water Model (NWM) versions 2.0, 2.1, and 3.0.
 
-```shell
-git clone https://github.com/NOAA-OWP/3d-hydrofabric.git 
-```
-## Overview
+---
 
-This project is comprised of multiple subparts that together form a clear picture of 3D hydrofabric data model. One of the challenges of this work is mapping river bathymetries where there is no observation/measurement. The missing topobathy data is the in-channel part of a river system that a Digital Elevation Model (DEM) is not able to penetrate and sees the area as a flat surface. This missing topobathy data results in a misrepresentation of river volume. A representation of channel **depth (D), width (W), and shape** will allow better characterization of flow dynamics and help improve hydrodynamic models, routing models, and synthetic rating curves.
+## 2. Architectural Workflow: 6-Stage Sequential DAG
 
-**These three characteristics are obtained from satellite imagery, other data products, and machine learning models and describe in channel geometry that substitutes locations where there is no bathymetry measurement. The new channel shapes that has an estimate of missing channel area will improve modeling capabilities compared to having no bathymetry data**
+The inference engine runs predictions across river networks as a Directed Acyclic Graph (DAG). Upstream geometric predictions serve as engineered features for subsequent hydraulic stages (website refrence ....)
 
-## Data Model
+---
 
-The structure of the data model is based on the reference Hydrofabric Data Model and 
+## 3. Input Datasets and Schema Requirements
 
-* contains Bankfull (defined as 2-year flood frequency) and in-channel (defined as 2-year flood frequency) width and depth ML estimates
-* contains channel shape ML estimates based on analytical derivation of parameter r from [Dingman (2007)](https://www.sciencedirect.com/science/article/pii/S0022169406005063?casa_token=gKpjjfHrupEAAAAA:Cp1tVhLnwlfddS38gpcKiyOm_xR09JeTgEtYZbCP-c8SUSth6Fx6gBPOWeyxZldCClEL20EJ2JI)
-* Indexed to the National Hydrologic Geospatial Fabric (hydrofabric) for the Next Generation (NextGen) Hydrologic Modeling Framework
+The inference pipeline requires two input files: the Flowpaths GeoPackage and the Slope Parquet file. Common column aliases are resolved automatically.
 
-## ML Width Depth
+### 3.1 Flowlines GeoPackage (`--flowlines_path`)
+* Format: OGC GeoPackage (`.gpkg`)
+* Default Layer: `flowpaths` (set via `--flowpath_layer`)
 
-The goal of this machine learning model is to learn channel width, and depth using at a feature hydraulic geometry relations ([see here](https://noaa-owp.github.io/hydrofabric/articles/07-channel-geometry.html)). Here we use the concept of paramterizing channel proposed by [Dingman (2007)](https://www.sciencedirect.com/science/article/pii/S0022169406005063?casa_token=gKpjjfHrupEAAAAA:Cp1tVhLnwlfddS38gpcKiyOm_xR09JeTgEtYZbCP-c8SUSth6Fx6gBPOWeyxZldCClEL20EJ2JI) to get an estimate of channel shape.
+| Expected Column Name | Data Type | Units / Range | Status | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `flowpath_id` | `int64` / `int32` | Integer ID | Required | Primary unique flowline identifier. |
+| `flowpath_toid` | `int64` / `int32` | Integer ID | Required | Downstream target reach ID for DAG traversal. |
+| `mainstemlp` | `int64` / `int32` | Integer ID | Required | Mainstem Level Path ID for GMRF regularization. |
+| `hydroseq` | `int64` / `int32` | Integer Sequence | Required | Hydrological routing sequence number. |
+| `totdasqkm` | `float64` / `float32` | $\text{km}^2$ ($>0$) | Required | Total upstream contributing drainage area. |
+| `arb_sum` | `float64` / `float32` | $\text{km}$ ($\ge 0$) | Required | Total upstream accumulated stream length. |
+| `pathlength` | `float64` / `float32` | $\text{km}$ ($\ge 0$) | Required | Flowpath distance to terminal outlet. |
+| `lengthkm` | `float64` / `float32` | $\text{km}$ ($>0$) | Required | Segment length (calculated from geometry if missing). |
+| `areasqkm` | `float64` / `float32` | $\text{km}^2$ ($\ge 0$) | Required | Local catchment drainage area. |
+| `streamorder` | `int64` / `int32` | $1 - 10$ | Required | Strahler stream order. |
+| `terminalfl` | `int64` / `int32` | 0 or 1 | Required | Terminal reach flag indicator. |
+| `geometry` | `LineString` | Projected or EPSG:4326 | Required | Vector geometry used for reach sinuosity. |
 
-The inputs to the model are carefully chosen from investigating a wide litrature on this topic including works by [Lin et al., 2020](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019GL086405), [Blackburn-Lynch et al., 2017](https://onlinelibrary.wiley.com/doi/full/10.1111/1752-1688.12540?casa_token=UgvAE7gtRPsAAAAA%3Anb2Kq8WP8d_TAD8lu7CE1CkpaY7386FzBPvym436EOqP3gc7pGKRcxE_Tt1XQEtRYEAngTHmLa1iDxo), [Doyle et al., 2023](https://onlinelibrary.wiley.com/doi/full/10.1111/1752-1688.13116?casa_token=mGKCMw89-DoAAAAA%3AF3lJezzo74bXEB-8uo04pBYyth6ny9pi_R_u9Ubb48cI7sMO9erOisD_g8dQsjd-r-LHJEO-e0hT_EA).
+### 3.2 Slope Parquet File (`--slopes_path`)
+* Format: Apache Parquet (`.parquet`)
 
-These data include:
-1. Climate variables
-2. Soil and sub-surface characteristics
-3. Catchment characteristics
-4. Topology and flow characteristics
-5. National Water Model flood frequencies
-6. Anthropogenic Influences
+| Expected Column Name | Acceptable Aliases | Data Type | Units | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `flowpath_id` | `id` | `int64` / `int32` | Identifier | Reach ID to match against Flowpaths. |
+| `slope` | `slope_m_m`, `final_regularized_slope` | `float64` / `float32` | $\text{m/m}$ ($>0$) | Reach energy slope from DEM analysis. |
 
-These data are aggregated from various databases including, the reference fabric, StreamCat, NWM 2.1, different satellite, reanalysis, and LSM models.
-
-The [HYDRoSWOT](https://data.usgs.gov/datacatalog/data/USGS:57435ae5e4b07e28b660af55) – HYDRoacoustic dataset in support of Surface Water Oceanographic Topography is used as ground truth data for our ML models. A rigorous fitting and data cleaning procedure is applied using the [AHGestimation](https://mikejohnson51.github.io/AHGestimation/) package ([Johnson et al, 2023](https://www.preprints.org/manuscript/202212.0390/v1)).  
-
-Given a set of characteristics described above the ML model predicts all 6 coefficients and exponents of the hydraulic geometry relations for bankfull width, depth, and velocity. It also predicts the channel shape parameter (Dinman's r)
-that gives a schematic representation of the channel shape.
-
-<div style="display: flex; justify-content: center;">
-  <img src="assets/images/cshape2.jpg" width="80%">
-</div>
-.
-
-The predictions of Bankfull width and depth surpass the currently implemented regional estimates in NWM 2, 2.1, and 3 for different hydrological landscape regions.
-
-
-![Example2](assets/images/ml1.png)
-
-To deploy the ML model 
-```shell
-cd channel-WD/deployment
-bash conda_setup.bash -n -1 
-```
-Where:  
-
-**-n** is the number of cores to be used in parallel. An integer depends on the number of cores. Use -1 for utilizing all
-
-To train the ML model 
-
-```shell
-cd channel-WD
-./run_ml.bash -c mymodel -n -1 -x False -y False -r 0.6 -t 5
-```
-Where:  
-
-**-c** is the name of the running script and generated folder with outputs. Any name.
-
-**-n** is the number of cores to be used in parallel. An integer depends on the number of cores. Use -1 for utilizing all
-
-**-x** is the to apply a transformation to predictor variables. Options are True and False
-
-**-y** is the to apply a transformation to predicted variables. Options are True and False
-
-**-r** is the coefficient of determination used to filter bad measurements in ADCP data. Ranges from 0.0-1.0
-
-**-t** is the count threshold to filter stations that have number of recorded observations greater than the count threshold i.e., 5
-
-
-## ML Channel Shape
-
-The channel shape ML model is trained similarly to that channel shape and width model. The testing however is done in time varying way such that every measurement of width and depth for a respective discharge are tested against the predicted AHG coefficients by plugin discharge into the learned AHG relations. The trained ML model then can be used to predict channel shape for all valid locations in HydroSWOT database.
-
-![Example1](assets/images/predicted.png)
-
-And further extended to CONUS based on reference fabric.
-
-For comprehensive details please visit this [site](https://sites.google.com/u.boisestate.edu/conus-fhg/home?pli=1#h.p04mdv3fynoe) for more details.
-
-To train the ML model 
-
-```shell 
-cd channel-shape
-sh run_ml.bash -c mymodel -n -1 -x False -y False -r 0.8
+### 3.3 Model Directory Structure
+Model directories (`--tw_model_path`, `--depth_model_path`, `--r_model_path`, `--n_model_path`, `--n_in_model_path`, `--n_out_model_path`) accept local directory paths or `s3://` URIs:
+```text
+<model_directory>/
+  |-- trained_xgboost_model_update_<target>_final.pickle.dat
+  |-- transformation_metadata_<target>.json
+  |-- final_model_features_<target>.json
+  |-- metrics/
+  |   \-- median_imput_<target>.parquet
+  \-- ensemble/
+      |-- ensemble_metadata_n.json
+      |-- resnet_model_1.pickle.dat ... resnet_model_N.pickle.dat
+      \-- xgb_model_1.pickle.dat ... xgb_model_M.pickle.dat
 ```
 
-Where:  
+---
 
-**-c** is the name of the running script and generated folder with outputs. Any name.
+## 4. Master Consolidated Output Schema
 
-**-n** is the number of cores to be used in parallel. An integer depends on the number of cores. Use -1 for utilizing all
+The prediction engine writes a unified Parquet file to:
+`{output_dir}/{process_domain}/deployment/data/final_consolidated_predictions_{process_domain}.parquet`
 
-**-x** is the to apply a transformation to predictor variables. Options are True and False
+| Column Header | Data Type | Units / Range | Description |
+| :--- | :--- | :--- | :--- |
+| `flowpath_id` | `Int64` | Identifier | Primary reach feature identifier. |
+| `slope` | `float32` | $\text{m/m}$ ($>0$) | Reach energy slope. |
+| `owp_tw_bf_m` | `float32` | meters | Predicted bankfull top width. |
+| `owp_y_bf_m` | `float32` | meters | Predicted bankfull channel depth. |
+| `owp_r_bf` | `float32` | Dimensionless ($\ge 1.0$) | Predicted Dingman channel shape exponent. |
+| `owp_n_single` | `float32` | $\text{s/m}^{1/3}$ ($0.01 - 0.35$) | Regularized overall Manning's roughness. |
+| `owp_n_single_lcl` | `float32` | $\text{s/m}^{1/3}$ | Overall roughness lower control limit. |
+| `owp_n_single_ucl` | `float32` | $\text{s/m}^{1/3}$ | Overall roughness upper control limit. |
+| `confidence_score_n` | `float32` | $\%$ ($0.0 - 100.0$) | Ensemble ML confidence score for roughness. |
+| `owp_n_in_channel` | `float32` | $\text{s/m}^{1/3}$ ($0.01 - 0.35$) | Regularized in-channel roughness. |
+| `owp_n_in_channel_lcl` | `float32` | $\text{s/m}^{1/3}$ | In-channel roughness lower control limit. |
+| `owp_n_in_channel_ucl` | `float32` | $\text{s/m}^{1/3}$ | In-channel roughness upper control limit. |
+| `confidence_score_n_in_channel` | `float32` | $\%$ ($0.0 - 100.0$) | In-channel ML confidence score. |
+| `owp_n_out_channel` | `float32` | $\text{s/m}^{1/3}$ ($0.01 - 0.35$) | Regularized overbank roughness. |
+| `owp_n_out_channel_lcl` | `float32` | $\text{s/m}^{1/3}$ | Overbank roughness lower control limit. |
+| `owp_n_out_channel_ucl` | `float32` | $\text{s/m}^{1/3}$ | Overbank roughness upper control limit. |
+| `confidence_score_n_out_channel` | `float32` | $\%$ ($0.0 - 100.0$) | Overbank ML confidence score. |
 
-**-y** is the to apply a transformation to predicted variables. Options are True and False
+---
 
-**-r** is the coefficient of determination used to filter bad measurements in ADCP data. Ranges from 0.0-1.0
+## 5. Inference Pipeline Execution
 
-## Getting involved
+### 5.1 Environment Setup
 
-NOAA's National Water Center welcomes anyone to contribute to the 3D Hydrofabric repository to enhance OWP's FIM and NextGen capabilities. Please contact Arash Modaresi Rad (arash.rad@noaa.gov) or Fernando Salas (fernando.salas@noaa.gov) to get started.
+```bash
+# Clone the repository
+git clone https://github.com/NOAA-OWP/channel-shape-ML.git
+cd channel-shape-ML
 
-----
+# Create Conda environment
+conda env create -f environment.yml
+conda activate river_ml
 
-## Open source licensing info
-1. [TERMS](TERMS.md)
-2. [LICENSE](LICENSE)
+# For GPU-accelerated inference:
+conda env create -f environment-cuda.yml
+conda activate river_ml_cuda
+```
 
+### 5.2 CLI Inference Execution
 
-----
+Run inference locally using `run_inference.py`:
 
-## Credit and References
+```bash
+python run_inference.py \
+  --flowlines_path "/path/to/flowlines/domain.gpkg" \
+  --slopes_path "/path/to/slope.parquet" \
+  --output_dir "data/outputs" \
+  --process_domain "domain" \
+  --tw_model_path "/path/to/tw_model/deployment/models" \
+  --y_model_path "/path/to/y_model/deployment/models" \
+  --r_model_path "/path/to/r_model/deployment/models" \
+  --n_model_path "/path/to/n_model/deployment/models" \
+  --n_in_channel_model_path "/path/to/n_in_model/deployment/models" \
+  --n_out_channel_model_path "/path/to/n_out_model/deployment/models" \
+  --chunk_size 100000
+```
 
+To run inference streaming model files directly from Amazon S3:
 
-----
+Option A: With AWS SSO (`aws sso login --profile <profile>`)
 
+```bash
+# 1. Authenticate with AWS SSO on host
+aws sso login --profile my-sso-profile
+
+# 2. Run inference referencing S3 URIs
+python run_inference.py \
+  --aws_profile "my-sso-profile" \
+  --flowlines_path "s3://your-bucket-name/data/reference.gpkg" \
+  --slopes_path "s3://your-bucket-name/data/slope.parquet" \
+  --output_dir "s3://your-bucket-name/outputs" \
+  --process_domain "domain" \
+  --tw_model_path "s3://your-bucket-name/bankfull_topwidth/model" \
+  --y_model_path "s3://your-bucket-name/bankfull_depth/model" \
+  --r_model_path "s3://your-bucket-name/bankfull_shape/model" \
+  --n_model_path "s3://your-bucket-name/manning_single/model" \
+  --n_in_channel_model_path "s3://your-bucket-name/manning_in_channel/model" \
+  --n_out_channel_model_path "s3://your-bucket-name/manning_out_channel/model" \
+  --chunk_size 100000
+```
+
+Option B: With Static AWS IAM Keys
+```bash
+export AWS_ACCESS_KEY_ID="AKIA..."
+export AWS_SECRET_ACCESS_KEY="..."
+export AWS_DEFAULT_REGION="us-east-1"
+
+python run_inference.py \
+  --flowlines_path "s3://your-bucket-name/data/reference.gpkg" \
+  --slopes_path "s3://your-bucket-name/data/slope.parquet" \
+  --output_dir "s3://your-bucket-name/outputs" \
+  --process_domain "domain" \
+  --tw_model_path "s3://your-bucket-name/bankfull_topwidth/model" \
+  --y_model_path "s3://your-bucket-name/bankfull_depth/model" \
+  --r_model_path "s3://your-bucket-name/bankfull_shape/model" \
+  --n_model_path "s3://your-bucket-name/manning_single/model" \
+  --n_in_channel_model_path "s3://your-bucket-name/manning_in_channel/model" \
+  --n_out_channel_model_path "s3://your-bucket-name/manning_out_channel/model" \
+  --chunk_size 100000
+```
+Option C: With AWS EC2 / Batch / ECS IAM Instance Roles
+On AWS EC2 or AWS Batch instances with attached IAM instance profile roles, no keys or profiles are passed:
+
+```bash
+python run_inference.py \
+  --flowlines_path "s3://your-bucket-name/data/reference.gpkg" \
+  --slopes_path "s3://your-bucket-name/data/slope.parquet" \
+  --output_dir "s3://your-bucket-name/outputs" \
+  --process_domain "domain" \
+  --tw_model_path "s3://your-bucket-name/bankfull_topwidth/model" \
+  --y_model_path "s3://your-bucket-name/bankfull_depth/model" \
+  --r_model_path "s3://your-bucket-name/bankfull_shape/model" \
+  --n_model_path "s3://your-bucket-name/manning_single/model" \
+  --n_in_channel_model_path "s3://your-bucket-name/manning_in_channel/model" \
+  --n_out_channel_model_path "s3://your-bucket-name/manning_out_channel/model" \
+  --chunk_size 100000
+```
+
+### 5.3 Docker Execution
+
+Build and run using Docker:
+```bash
+docker buildx build -t river_ml_pipeline:latest .
+```
+Option A: Local Host Volume Mounts (Windows WSL2, Mac, Linux)
+```bash
+docker run --rm \
+  --shm-size=8g \
+  -v "/wroking/directory":/data/flowlines:ro \
+  -v "/wroking/directory":/data/slopes:ro \
+  -v "$(pwd)/data/models/conus":/app/models/conus:ro \
+  -v "$(pwd)/data/outputs/oconus":/app/outputs/oconus \
+  river_ml_pipeline:latest \
+  --flowlines_path "/data/flowlines/path/to/flowlines.gpkg" \
+  --slopes_path "/data/slopes/path/to/slope.parquet" \
+  --output_dir "/app/outputs/oconus" \
+  --process_domain "domain" \
+  --tw_model_path "/app/models/conus/superconus/tw_model/models" \
+  --y_model_path "/app/models/conus/superconus/y_model/models" \
+  --r_model_path "/app/models/conus/superconus/r_model/models" \
+  --n_model_path "/app/models/conus/superconus/n_model/models" \
+  --n_in_channel_model_path "/app/models/conus/superconus/n_in_model/models" \
+  --n_out_channel_model_path "/app/models/conus/superconus/n_out_model/models" \
+  --chunk_size 100000
+```
+Option B: Docker with AWS SSO Mount (`$HOME/.aws`)
+```bash
+docker run --rm \
+  --shm-size=8g \
+  -v "$HOME/.aws":/root/.aws:ro \
+  -e AWS_PROFILE="my-sso-profile" \
+  -e AWS_DEFAULT_REGION="us-east-1" \
+  river_ml_pipeline:latest \
+  --flowlines_path "/data/flowlines/path/to/flowlines.gpkg" \
+  --slopes_path "/data/slopes/path/to/slope.parquet" \
+  --output_dir "/app/outputs/oconus" \
+  --process_domain "domain" \
+  --tw_model_path "s3://your-bucket-name/path/bankfull_topwidth/model" \
+  --y_model_path "s3://your-bucket-name/path/bankfull_depth/model" \
+  --r_model_path "s3://your-bucket-name/path/bankfull_shape/model" \
+  --n_model_path "s3://your-bucket-name/path/manning_single/model" \
+  --n_in_channel_model_path "s3://your-bucket-name/path/manning_in_channel/model" \
+  --n_out_channel_model_path "s3://your-bucket-name/path/manning_out_channel/model" \
+  --chunk_size 100000 
+```
+---
+
+## 6. Release Notes (v2.0.0-alpha)
+
+<details open>
+<summary><b>Release Notes: v2.0.0-alpha Milestone (Click to collapse)</b></summary>
+
+### Motivation and Architectural Overview
+The v2.0.0-alpha release marks the first major milestone of the next-generation channel geometry and hydraulic roughness estimation framework (architecture #57, closes #58, PR #59). Developed in direct support of the Next Generation Water Modeling Framework (NextGen) and Flood Inundation Mapping (FIM), this milestone transitions the project from isolated single-target scripts to an integrated, high-performance sequential inference architecture.
+
+The v2 architecture is trained on comprehensive field soundings from USGS streamgages, HydroSWOT acoustic Doppler current profiler (ADCP) surveys, and MIP observations, using strictly hydrofabric topological attributes as predictors during inference extending its inference capability to OCONUS.
+
+### Key Capabilities and Additions
+* **6-Stage Sequential DAG Engine**: Chains predictions across river networks in a physically constrained cascade: Bankfull Top Width (TW_bf_m) -> Bankfull Depth (Y_bf_m) -> Dingman Shape Exponent (r) -> Composite Manning's Roughness (n) -> In-Channel Roughness (n_in) -> Overbank Floodplain Roughness (n_out).
+* **Gaussian Markov Random Field (GMRF) Regularization**: Enforces downstream hydraulic monotonicity and spatial continuity along mainstem flowpaths, penalizing unphysical reach-to-reach numerical fluctuations across network connections.
+* **Decoupled Model Ingestion and S3 Cloud Streaming**: Supports loading model weights and ensembles directly from local filesystems or private Amazon S3 buckets (`s3://spatial-water-noaa/machine_learning/`) via `fsspec` and AWS IAM/SSO credentials, removing local disk staging overhead.
+* **Containerized Workflows**: Multi-platform Docker build specification, Docker Compose service definitions, and Conda environments (CPU and CUDA GPU acceleration) supporting local workstations, server instances, and cloud batch fleets.
+* **Preserved Baseline Continuity**: Baseline v1.0.0 training bash scripts and preprocessing utilities are safely preserved under `legacy/v1_baseline/` to guarantee scientific reproducibility while v2 training pipelines are built.
+
+### PR and Milestone Tracking
+* Transition to v2.0.0 High-Performance ML Architecture (#57)
+* Task: Implement 6-Stage Sequential DAG Inference Engine and GMRF Smoother (#58)
+* Feature Pull Request: Feature/v2 inference pipeline (#59)
+
+</details>
+
+---
+
+## 7. Evolution and Development Roadmap
+
+| Version | Status | Architectural Scope | Key Capabilities |
+| :--- | :--- | :--- | :--- |
+| **v1.0.0** | Current Production | Foundational ML pipelines (`channel-WD`, `channel-shape`, `preprocess`) | - 50 candidate model screening<br>- Distillation of 400+ attributes to 60 predictors<br>- Bankfull width, depth, and Dingman r CLI |
+| **v2.0.0-alpha** | Active Integration | Modernized inference engine (`src/`, DAG architecture) | - 6-stage sequential prediction DAG (TW to Y to r to n)<br>- GMRF topological regularization<br>- Decoupled AWS S3 and local model loading<br>- Extention to domains outside CONUS <br>- Using all MIP, HydroSWOT, and USGS gague data|
+| **v2.0.0** | Target Milestone | Full Next-Generation ML suite | - Refactored v2 preprocessing pipeline<br>- Distributed multi-model training pipelines<br>- Automated USGS gauge, MIP, and HydroSWOT accuracy benchmarks<br>- Full automated XAI intergration into all pipelines |
+
+---
+
+## 8. Contributing and Code Standards
+
+Contributions from NOAA, academic partners, and the hydrologic modeling community are welcome.
+1. Check the [Issue Tracker](https://github.com/NOAA-OWP/channel-shape-ML/issues) for planned milestones.
+2. Review [CONTRIBUTING.md](CONTRIBUTING.md) for branch guidelines and pull request instructions.
+
+Project Contacts:
+* Lead Developer: Arash Modaresi Rad (arash.rad@noaa.gov)
+* Project Oversight: Fernando Salas (fernando.salas@noaa.gov)
+* Affiliation: National Oceanic and Atmospheric Administration (NOAA), National Water Center, Office of Water Prediction (OWP)
+
+---
+
+## 9. Open Source Licensing and Disclaimer
+
+This project is licensed under the Apache License, Version 2.0. See the [LICENSE](LICENSE) file for complete details.
+
+### NOAA Scientific Disclaimer
+This repository is a scientific product and is not official communication of the National Oceanic and Atmospheric Administration, or the United States Department of Commerce. All NOAA GitHub project code is provided on an 'as is' basis and the user assumes responsibility for its use. Any claims against the Department of Commerce or Department of Commerce bureaus stemming from the use of this GitHub project will be governed by all applicable Federal law. Any reference to specific commercial products, processes, or services by service mark, trademark, manufacturer, or otherwise, does not constitute or imply their endorsement, recommendation or favoring by the Department of Commerce. See [TERMS.md](TERMS.md).
+
+---
+
+## 10. References and Citations
+
+1. Dingman, S. L. (2007). Analytical derivation of at-a-station hydraulic–geometry relations. Journal of Hydrology, 334(1-2), 17-27.
+2. Leopold, L. B., & Maddock, T. (1953). The hydraulic geometry of stream channels and some physiographic implications (Vol. 252). US Government Printing Office.
+3. Modaresi Rad, A., Johnson, J. M., Ghahremani, Z., Coll, J., & Frazier, N. (2024). Enhancing river channel dimension estimation: A machine learning approach leveraging the National Water Model, hydrographic networks, and landscape characteristics. Journal of Geophysical Research: Machine Learning and Computation, 1(4), e2024JH000173.
+4. Blackburn‐Lynch W, Agouridis CT, Barton CD. Development of regional curves for hydrologic landscape regions (HLR) in the contiguous United States. JAWRA Journal of the American Water Resources Association. 2017 Aug;53(4):903-28.
