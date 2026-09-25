@@ -1,0 +1,202 @@
+site_name: "ML Channel Geometry & Hydraulics Parameterization"
+site_description: >-
+  Physics-informed multi-stage ML pipeline for continental-scale
+  channel geometry and Manning's roughness estimation
+site_url: https://noaa-owp.github.io/channel-shape-ML/
+repo_url: https://github.com/NOAA-OWP/channel-shape-ML
+repo_name: NOAA-OWP/channel-shape-ML
+
+# ---------------------------------------------------------------------------
+# Theme
+# ---------------------------------------------------------------------------
+theme:
+  name: material
+  custom_dir: docs/overrides
+  palette:
+    # Dark mode (default)
+    - scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    # Light mode
+    - scheme: default
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  font:
+    text: Inter
+    code: JetBrains Mono
+  logo: assets/noaa_digital_logo-2022.png
+  favicon: assets/noaa_digital_logo-2022.png
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.indexes
+    - content.tabs.link
+    - search.suggest
+    - search.highlight
+    - toc.follow
+    - content.code.copy
+    - header.autohide
+
+# ---------------------------------------------------------------------------
+# Plugins
+# ---------------------------------------------------------------------------
+plugins:
+  - search
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      effect: zoom
+      slide_effect: slide
+      width: "100%"
+      height: auto
+      zoomable: true
+      draggable: true
+
+# ---------------------------------------------------------------------------
+# Extras
+# ---------------------------------------------------------------------------
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/NOAA-OWP/channel-shape-ML
+
+extra_css:
+  - assets/css/custom.css
+
+extra_javascript:
+  - assets/js/neural-watershed.js
+  - assets/js/version-select.js
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+# ---------------------------------------------------------------------------
+# Markdown extensions
+# ---------------------------------------------------------------------------
+markdown_extensions:
+  # Math / LaTeX
+  - pymdownx.arithmatex:
+      generic: true
+  # Fenced code blocks & Mermaid diagrams
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  # Tabbed content (regions, models)
+  - pymdownx.tabbed:
+      alternate_style: true
+  # Collapsible sections
+  - pymdownx.details
+  # Highlighted text
+  - pymdownx.mark
+  # Emoji
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  # Keyboard keys
+  - pymdownx.keys
+  # Diff-style markup
+  - pymdownx.critic
+  # Admonitions (NOTE, WARNING, TIP boxes)
+  - admonition
+  # HTML attributes
+  - attr_list
+  # Markdown inside HTML blocks
+  - md_in_html
+  # Definition lists
+  - def_list
+  # Data tables
+  - tables
+  # Footnotes
+  - footnotes
+  # Table of contents
+  - toc:
+      permalink: true
+
+# ---------------------------------------------------------------------------
+# Navigation
+# ---------------------------------------------------------------------------
+nav:
+  - Home: index.md
+  - Pipeline Overview:
+    - overview/index.md
+    - Data Sources: overview/data-sources.md
+    - Feature Engineering: overview/feature-engineering.md
+    - Explainable AI: overview/xai.md
+    - Study Area: overview/study-area.md
+  - TopWidth:
+    - tw/index.md
+    - Literature: tw/literature.md
+    - Models: tw/models.md
+    - Skill: tw/skill.md
+    - Uncertainty: tw/uncertainty.md
+    - XAI: tw/xai.md
+  - Depth:
+    - y/index.md
+    - Literature: y/literature.md
+    - Models: y/models.md
+    - Skill: y/skill.md
+    - Uncertainty: y/uncertainty.md
+    - XAI: y/xai.md
+  - Shape:
+    - r/index.md
+    - Literature: r/literature.md
+    - Models: r/models.md
+    - Skill: r/skill.md
+    - Uncertainty: r/uncertainty.md
+    - XAI: r/xai.md
+  - Roughness:
+    - n/index.md
+    - n-single:
+      - Literature: n/n-single/literature.md
+      - Model Architecture: n/n-single/models.md
+      - Model Skill: n/n-single/skill.md
+      - Uncertainty Quantification: n/n-single/uncertainty.md
+      - Explainability: n/n-single/xai.md
+    - n-inchannel:
+      - Literature: n/n-in/literature.md
+      - Model Architecture: n/n-in/models.md
+      - Model Skill: n/n-in/skill.md
+      - Uncertainty Quantification: n/n-in/uncertainty.md
+      - Explainability: n/n-in/xai.md
+    - n-overbank:
+      - Literature: n/n-out/literature.md
+      - Model Architecture: n/n-out/models.md
+      - Model Skill: n/n-out/skill.md
+      - Uncertainty Quantification: n/n-out/uncertainty.md
+      - Explainability: n/n-out/xai.md
+  - v1.0.0 (CONUS-FHG):
+    - v1.0.0/index.md
+    - Pipeline Overview:
+      - Overview: v1.0.0/overview/index.md
+      - Data Sources: v1.0.0/overview/data-sources.md
+      - Methodology & Ensemble: v1.0.0/overview/methods.md
+    - TopWidth:
+      - Overview: v1.0.0/tw/index.md
+      - Model Architecture: v1.0.0/tw/models.md
+      - Model Skill: v1.0.0/tw/skill.md
+      - Explainability: v1.0.0/tw/xai.md
+    - Depth:
+      - Overview: v1.0.0/y/index.md
+      - Model Architecture: v1.0.0/y/models.md
+      - Model Skill: v1.0.0/y/skill.md
+      - Explainability: v1.0.0/y/xai.md
+    - Shape:
+      - Overview: v1.0.0/r/index.md
+      - Model Architecture: v1.0.0/r/models.md
+      - Model Skill: v1.0.0/r/skill.md
+      - Explainability: v1.0.0/r/xai.md
+    - Roughness:
+      - Overview: v1.0.0/n/index.md
+  - References: references.md
