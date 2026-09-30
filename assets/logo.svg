@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="100%" height="100%">
+  <!-- Parabolic channel cross section -->
+  <path d="M 4 8 C 4 28, 28 28, 28 8" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Water surface line -->
+  <line x1="6" y1="12" x2="10" y2="12" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Sine wave ripple -->
+  <path d="M 10 12 Q 13 9 16 12 T 22 12" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Right water surface line -->
+  <line x1="22" y1="12" x2="26" y2="12" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,1658 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Physics-informed multi-stage ML pipeline for continental-scale channel geometry and Manning's roughness estimation">
+      
+      
+      
+        <link rel="canonical" href="https://noaa-owp.github.io/channel-shape-ML/v1.0.0/y/xai/">
+      
+      
+        <link rel="prev" href="../skill/">
+      
+      
+        <link rel="next" href="../../r/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/noaa_digital_logo-2022.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Depth (Y) — Explainable AI (XAI) &amp; Physical Interpretability - ML Channel Geometry &amp; Hydraulics Parameterization</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/css/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#explainable-ai-xai-physical-interpretability" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <!-- 1. Mobile Drawer Toggle (Hamburger 3 lines) -->
+    <label class="md-header__button md-icon header-drawer-btn" for="__drawer" aria-label="Open Navigation Menu">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+
+    <!-- 2. Dual Brand Logos (NOAA & Lynker) -->
+    <a href="../../.." title="ML Channel Geometry &amp; Hydraulics Parameterization" class="md-header__button md-logo" aria-label="ML Channel Geometry &amp; Hydraulics Parameterization" data-md-component="logo">
+      <div class="header-dual-logos">
+  <img src="../../../assets/noaa_digital_logo-2022.png" alt="NOAA Logo" class="header-brand-logo noaa">
+  <img src="../../../assets/Lynker-Primary-Logo.png" alt="Lynker Logo" class="header-brand-logo lynker">
+</div>
+    </a>
+
+    <!-- 3. Site Title (Flexes and truncates smoothly) -->
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ML Channel Geometry &amp; Hydraulics Parameterization
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Depth (Y) — Explainable AI (XAI) &amp; Physical Interpretability
+            
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Search -->
+    
+      
+      
+        <label class="md-header__button md-icon header-search-btn" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    <!-- 5. Top-Right Model Version Selector -->
+    <div class="header-version-container">
+      <div class="header-version-pill" title="Model Release Version">
+        <span class="version-dot"></span>
+        <label for="header-version-select" class="version-label">Model:</label>
+        <select id="header-version-select" class="header-version-select">
+          <option value="v2.0.0">v2.0.0</option>
+          <option value="v1.0.0">v1.0.0</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 6. Dark / Light Mode Palette Toggle -->
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="teal" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+
+    <!-- 7. GitHub Repository Button -->
+    
+      <div class="md-header__source">
+        <a href="https://github.com/NOAA-OWP/channel-shape-ML" title="GitHub Repository" class="header-github-btn" target="_blank" rel="noopener">
+  <svg class="header-github-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+  </svg>
+  <span class="header-github-name">NOAA-OWP/channel-shape-ML</span>
+</a>
+      </div>
+    
+  </nav>
+
+  
+    
+      
+
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      <!-- 1. Home Tab -->
+      <li class="md-tabs__item">
+        <a href="../../.." class="md-tabs__link" data-tab="home">
+          Home
+        </a>
+      </li>
+
+      <!-- 2. Pipeline Overview Tab -->
+      <li class="md-tabs__item">
+        
+          <a href="../../overview/" class="md-tabs__link" data-tab="overview">
+            Pipeline Overview
+          </a>
+        
+      </li>
+
+      <!-- 3. TopWidth Tab -->
+      <li class="md-tabs__item">
+        
+          <a href="../../tw/" class="md-tabs__link" data-tab="tw">
+            TopWidth
+          </a>
+        
+      </li>
+
+      <!-- 4. Depth Tab -->
+      <li class="md-tabs__item">
+        
+          <a href="../" class="md-tabs__link md-tabs__link--active" data-tab="y">
+            Depth
+          </a>
+        
+      </li>
+
+      <!-- 5. Shape Tab -->
+      <li class="md-tabs__item">
+        
+          <a href="../../r/" class="md-tabs__link" data-tab="r">
+            Shape
+          </a>
+        
+      </li>
+
+      <!-- 6. Roughness Tab -->
+      <li class="md-tabs__item">
+        
+          <a href="../../n/" class="md-tabs__link" data-tab="n">
+            Roughness
+          </a>
+        
+      </li>
+
+      <!-- 7. References Tab -->
+      <li class="md-tabs__item">
+        <a href="../../../references/" class="md-tabs__link" data-tab="references">
+          References
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+
+
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+  
+    
+    <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+      <!-- Edge Indicator Handle (Visible at left edge when drawer is auto-hidden) -->
+      <label class="drawer-edge-handle" for="__drawer" title="Open navigation menu" aria-label="Open navigation menu">
+        <span class="drawer-edge-handle-bar"></span>
+        <svg class="drawer-edge-handle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path>
+        </svg>
+        <span class="drawer-edge-handle-label">Menu</span>
+      </label>
+
+      <!-- Full-Height Left Edge Hover Zone -->
+      <div class="drawer-edge-hover-zone" aria-hidden="true"></div>
+
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner">
+          
+
+
+  
+
+
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <!-- Mobile / Tablet Drawer Header Box -->
+  <div class="drawer-header-box">
+    <!-- Row 1: Dual Brand Logos on left, Dark/Light Theme Toggle and Close Button on right -->
+    <div class="drawer-header-top">
+      <a href="../../.." title="ML Channel Geometry &amp; Hydraulics Parameterization" class="drawer-brand-link" aria-label="ML Channel Geometry &amp; Hydraulics Parameterization">
+        <div class="header-dual-logos">
+          <img src="../../../assets/noaa_digital_logo-2022.png" alt="NOAA Logo" class="header-brand-logo noaa">
+          <img src="../../../assets/Lynker-Primary-Logo.png" alt="Lynker Logo" class="header-brand-logo lynker">
+        </div>
+      </a>
+
+      <div class="drawer-header-actions">
+        <!-- Dark / Light Theme Toggle Button -->
+        <button type="button" class="drawer-theme-toggle" id="drawer-theme-toggle" title="Toggle dark/light mode" aria-label="Toggle dark/light mode">
+          <!-- Sun icon (shown in dark mode to switch to light mode) -->
+          <svg class="drawer-icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path>
+          </svg>
+          <!-- Moon icon (shown in light mode to switch to dark mode) -->
+          <svg class="drawer-icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path>
+          </svg>
+        </button>
+
+        <!-- Close Drawer Button (X) -->
+        <label class="drawer-close-btn" for="__drawer" title="Close drawer" aria-label="Close navigation drawer">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path>
+          </svg>
+        </label>
+      </div>
+    </div>
+
+    <!-- Row 2: Site Title (Clean and unhampered, non-overlapping) -->
+    <div class="drawer-title-row">
+      <span class="drawer-site-title">ML Channel Geometry &amp; Hydraulics Parameterization</span>
+    </div>
+
+    <!-- Row 3: Model Version Selector Pill -->
+    <div class="drawer-version-pill-container">
+      <div class="header-version-pill drawer-version-pill" title="Model Release Version">
+        <span class="version-dot"></span>
+        <label for="drawer-version-select" class="version-label">Model:</label>
+        <select id="drawer-version-select" class="header-version-select drawer-version-select">
+          <option value="v2.0.0">v2.0.0</option>
+          <option value="v1.0.0">v1.0.0</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  
+    <div class="md-nav__source drawer-nav-source">
+      <a href="https://github.com/NOAA-OWP/channel-shape-ML" title="GitHub Repository" class="header-github-btn" target="_blank" rel="noopener">
+  <svg class="header-github-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+  </svg>
+  <span class="header-github-name">NOAA-OWP/channel-shape-ML</span>
+</a>
+    </div>
+  
+
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CONUS-FHG v1.0.0 Release
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+          
+            
+            
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_v1_2">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../overview/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline Overview
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_v1_2" id="__nav_v1_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_v1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_v1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pipeline Overview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../overview/data-sources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../overview/methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methodology &amp; Ensemble
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+          
+            
+            
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_v1_3">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tw/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TopWidth
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_v1_3" id="__nav_v1_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_v1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_v1_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    TopWidth
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tw/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tw/skill/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tw/xai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explainability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+          
+            
+            
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_v1_4" checked="">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_v1_4" id="__nav_v1_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_v1_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_v1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Depth
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skill/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explainability
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explainability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#the-role-of-explainable-ai-in-river-geomorphology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Role of Explainable AI in River Geomorphology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#global-feature-importance-elbow-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Global Feature Importance &amp; Elbow Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Global Feature Importance &amp; Elbow Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#top-15-predictors-ranked-by-shap-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top 15 Predictors Ranked by SHAP Value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elbow-method-feature-space-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Elbow Method Feature Space Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shap-interaction-dependency-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SHAP Interaction &amp; Dependency Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SHAP Interaction &amp; Dependency Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actual-evapotranspiration-aet-times-soil-properties-interaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actual Evapotranspiration (AET) \(\times\) Soil Properties Interaction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actual Evapotranspiration (AET) \(\times\) Soil Properties Interaction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#physical-mechanisms-revealed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical Mechanisms Revealed:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synthesis-with-fluvial-geomorphic-theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synthesis with Fluvial Geomorphic Theory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Navigation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+          
+            
+            
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_v1_5">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../r/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shape
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_v1_5" id="__nav_v1_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_v1_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_v1_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Shape
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../r/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../r/skill/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../r/xai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explainability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+          
+            
+            
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_v1_6">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../n/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roughness
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_v1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_v1_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Roughness
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+          
+        
+      
+        
+      
+    
+  </ul>
+
+  <!-- Seamless Frameless Left Sidebar River Background -->
+  <div class="sidebar-watershed-container">
+    <canvas id="sidebar-watershed-canvas"></canvas>
+  </div>
+</nav>
+        </div>
+      </div>
+    </div>
+  
+
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="explainable-ai-xai-physical-interpretability">Explainable AI (XAI) &amp; Physical Interpretability<a class="headerlink" href="#explainable-ai-xai-physical-interpretability" title="Permanent link">¶</a></h1>
+<blockquote>
+<p><strong>Publication Reference</strong>: Modaresi Rad, A., et al. (2024). <em>Enhancing River Channel Dimension and Bathymetry Estimates Across Continental Scale Using Machine Learning and Functional Hydraulic Geometry</em>. <strong>Journal of Geophysical Research: Machine Learning and Computation</strong>, 1(3), e2024JH000173.</p>
+</blockquote>
+<hr>
+<h2 id="the-role-of-explainable-ai-in-river-geomorphology">The Role of Explainable AI in River Geomorphology<a class="headerlink" href="#the-role-of-explainable-ai-in-river-geomorphology" title="Permanent link">¶</a></h2>
+<p>In continental-scale hydrologic and hydrodynamic modeling, high predictive accuracy is necessary but insufficient on its own. To be trusted in regulatory flood risk mapping (FEMA) and operational flood forecasting (NOAA-OWP National Water Model), machine learning models must demonstrate that their predictions conform to established <strong>physical laws of open-channel hydraulics and fluvial geomorphology</strong>.</p>
+<p>We employ <strong>SHAP (SHapley Additive exPlanations)</strong> a cooperative game-theoretic framework developed by Lundberg &amp; Lee (2017) to compute exact, additive feature attributions for channel depth (<span class="arithmatex">\(Y\)</span>) and Functional Hydraulic Geometry (FHG) parameters (<span class="arithmatex">\(f\)</span> and <span class="arithmatex">\(c\)</span>).</p>
+<div class="arithmatex">\[
+f(\mathbf{x}) = \phi_0 + \sum_{j=1}^{M} \phi_j(\mathbf{x})
+\]</div>
+<p>where <span class="arithmatex">\(\phi_0\)</span> is the base expected model prediction across the continental dataset, and <span class="arithmatex">\(\phi_j(\mathbf{x})\)</span> is the Shapley value quantifying the positive or negative contribution of predictor <span class="arithmatex">\(j\)</span> for reach <span class="arithmatex">\(\mathbf{x}\)</span>.</p>
+<hr>
+<h2 id="global-feature-importance-elbow-optimization">Global Feature Importance &amp; Elbow Optimization<a class="headerlink" href="#global-feature-importance-elbow-optimization" title="Permanent link">¶</a></h2>
+<p>The global importance of each hydro-environmental predictor was evaluated across all CONUS training reaches by calculating the mean absolute Shapley value (<span class="arithmatex">\(|\phi_j|\)</span>):</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../../../assets/images/v1.0.0/y/Fig4_y.png" data-desc-position="bottom"><img alt="SHAP Global Feature Importance and Directional Impact for Channel Depth Parameters" loading="lazy" src="../../../assets/images/v1.0.0/y/Fig4_y.png"></a>
+<em>Figure 1: (a) Global TreeSHAP feature importance ranking and summary beeswarm plot for the v1.0.0 Depth model. Points represent individual stream reaches, with color indicating raw feature value (red = high, blue = low) and x-axis indicating impact on predicted depth. (b) Recursive feature elimination using the Elbow Method tracking model <span class="arithmatex">\(R^2\)</span>, demonstrating optimal parsimony at 15 features (<a href="https://doi.org/10.1029/2024JH000173">Modaresi Rad et al., 2024</a>).</em></p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph DRIVERS ["Dominant Channel Depth Predictors (Top 15 Subset)"]
+        direction TB
+        QBF["&lt;b&gt;1. Bankfull Discharge (Q&lt;sub&gt;bf&lt;/sub&gt;)&lt;/b&gt;&lt;br/&gt;Primary volumetric energy scaling depth"]
+        ELEV["&lt;b&gt;2. Elevation &amp; Reach Slope&lt;/b&gt;&lt;br/&gt;Gravitational energy gradient and valley setting"]
+        BFI["&lt;b&gt;3. Base Flow Index (BFI)&lt;/b&gt;&lt;br/&gt;Groundwater contribution &amp; permanent thalweg maintenance"]
+        PC0["&lt;b&gt;4. NWM Flood pc0 &amp; Flood pc1&lt;/b&gt;&lt;br/&gt;Hydrograph peakedness &amp; flood frequency moments"]
+        AET["&lt;b&gt;5. Actual Evapotranspiration (AET)&lt;/b&gt;&lt;br/&gt;Hydroclimatic moisture &amp; vegetated runoff regulation"]
+        SOIL["&lt;b&gt;6. Soil PCs (pc0, pc1, pc2) &amp; Roughness&lt;/b&gt;&lt;br/&gt;Geotechnical bank cohesion &amp; boundary resistance"]
+    end
+
+    class DRIVERS highlight-blue;
+    class QBF highlight-blue;
+    class ELEV highlight-blue;
+    class BFI highlight-teal;
+    class PC0 highlight-teal;
+    class AET highlight-orange;
+    class SOIL highlight-orange;</code></pre>
+<h3 id="top-15-predictors-ranked-by-shap-value">Top 15 Predictors Ranked by SHAP Value<a class="headerlink" href="#top-15-predictors-ranked-by-shap-value" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Rank</th>
+<th style="text-align: left;">Feature Name</th>
+<th style="text-align: left;">Category</th>
+<th style="text-align: left;">SHAP Directionality &amp; Hydraulic Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: left;"><strong>Bankfull Discharge</strong></td>
+<td style="text-align: left;">Hydrology</td>
+<td style="text-align: left;"><strong>Dominant positive driver</strong>. High <span class="arithmatex">\(Q_{\text{bf}}\)</span> (red dots) provides the primary volumetric flow to maintain deeper channel profiles (<span class="arithmatex">\(\text{SHAP} &gt; +5.0\)</span>).</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: left;"><strong>Elevation</strong></td>
+<td style="text-align: left;">Terrain</td>
+<td style="text-align: left;">High elevation (red dots) exhibits negative SHAP values, reflecting shallow, steep headwater channels relative to lowland mainstems.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>3</strong></td>
+<td style="text-align: left;"><strong>Slope</strong></td>
+<td style="text-align: left;">Geomorphometry</td>
+<td style="text-align: left;">High bed slope produces negative SHAP values. As flow velocity (<span class="arithmatex">\(m\)</span>) increases on steep gradients, stage rises more slowly per unit flow (<span class="arithmatex">\(f \downarrow\)</span>).</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: left;"><strong>Base Flow Index (BFI)</strong></td>
+<td style="text-align: left;">Hydrogeology</td>
+<td style="text-align: left;">High BFI (red dots) provides sustained perennial baseflow, scouring and maintaining a deeper, well-defined permanent channel thalweg.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>5</strong></td>
+<td style="text-align: left;"><strong>NWM Flood pc0</strong></td>
+<td style="text-align: left;">Flow Dynamics</td>
+<td style="text-align: left;">First principal component of NWM flood recurrence moments; governs peak channel-forming hydraulic capacity.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>6</strong></td>
+<td style="text-align: left;"><strong>Actual Evapotranspiration (AET)</strong></td>
+<td style="text-align: left;">Hydroclimate</td>
+<td style="text-align: left;">Reflects catchment water balance and vegetative maturity; high AET correlates with cohesive vegetated banks that promote vertical deepening.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>7</strong></td>
+<td style="text-align: left;"><strong>Elevation Difference</strong></td>
+<td style="text-align: left;">Terrain</td>
+<td style="text-align: left;">Reach-level topographic drop; steep relief concentrates energy into velocity rather than depth.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: left;"><strong>Soil pc1</strong></td>
+<td style="text-align: left;">Soil Mechanics</td>
+<td style="text-align: left;">First principal component of POLARIS soil properties; captures soil texture, clay fraction, and hydraulic conductivity.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>9</strong></td>
+<td style="text-align: left;"><strong>NWM Flood pc1</strong></td>
+<td style="text-align: left;">Flow Dynamics</td>
+<td style="text-align: left;">Second principal component of NWM flood quantiles; modulates moderate flood event magnitude.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>10</strong></td>
+<td style="text-align: left;"><strong>Roughness</strong></td>
+<td style="text-align: left;">Hydrodynamics</td>
+<td style="text-align: left;">Channel boundary resistance; retards velocity and raises equilibrium water stage.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>11</strong></td>
+<td style="text-align: left;"><strong>Soil pc2</strong></td>
+<td style="text-align: left;">Soil Mechanics</td>
+<td style="text-align: left;">Second principal component of soil profile characteristics, moderating soil moisture retention and bank stability.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>12</strong></td>
+<td style="text-align: left;"><strong>Arbolatesu</strong></td>
+<td style="text-align: left;">Hydrography</td>
+<td style="text-align: left;">Cumulative upstream network length; scales with cumulative flow accumulation and sediment transport capacity.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>13</strong></td>
+<td style="text-align: left;"><strong>PET</strong></td>
+<td style="text-align: left;">Climate</td>
+<td style="text-align: left;">Potential Evapotranspiration; captures atmospheric evaporative demand and aridity gradients.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>14</strong></td>
+<td style="text-align: left;"><strong>Lengthkm</strong></td>
+<td style="text-align: left;">Geometry</td>
+<td style="text-align: left;">Reach flowline length; longer reaches typically occur in low-gradient alluvial valleys with deeper cross-sections.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>15</strong></td>
+<td style="text-align: left;"><strong>Soil pc0</strong></td>
+<td style="text-align: left;">Soil Mechanics</td>
+<td style="text-align: left;">Fundamental soil physical characteristics influencing infiltration capacity and runoff routing.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="elbow-method-feature-space-optimization">Elbow Method Feature Space Optimization<a class="headerlink" href="#elbow-method-feature-space-optimization" title="Permanent link">¶</a></h3>
+<p>As illustrated in <strong>Figure 1b</strong>, recursive feature dropping guided by model skill demonstrates clear elbow dynamics:</p>
+<ul>
+<li>At <strong>116 features</strong>, cross-correlation and collinearity limit performance to <span class="arithmatex">\(R^2 \approx 58\%\)</span>.</li>
+<li>Progressively eliminating non-informative variables concentrates predictive skill into orthogonal physical drivers.</li>
+<li>The performance curve peaks at <strong>15 features (<span class="arithmatex">\(R^2 \approx 81\%\)</span>)</strong>, highlighted by the vertical red dashed line. Reducing features below 15 causes a rapid degradation in predictive skill (<span class="arithmatex">\(R^2 &lt; 76\%\)</span>).</li>
+</ul>
+<hr>
+<h2 id="shap-interaction-dependency-analysis">SHAP Interaction &amp; Dependency Analysis<a class="headerlink" href="#shap-interaction-dependency-analysis" title="Permanent link">¶</a></h2>
+<p>To evaluate non-linear environmental couplings, SHAP interaction values decouple individual predictor responses from second-order dependencies:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../../../assets/images/v1.0.0/y/Fig6_y.png" data-desc-position="bottom"><img alt="SHAP 2D Interaction and Dependence Analyses for Channel Depth Parameters" loading="lazy" src="../../../assets/images/v1.0.0/y/Fig6_y.png"></a>
+<em>Figure 2: SHAP dependency and interaction plot for Actual Evapotranspiration (AET), colored by Soil pc2 (<a href="https://doi.org/10.1029/2024JH000173">Modaresi Rad et al., 2024</a>).</em></p>
+<h3 id="actual-evapotranspiration-aet-times-soil-properties-interaction">Actual Evapotranspiration (AET) <span class="arithmatex">\(\times\)</span> Soil Properties Interaction<a class="headerlink" href="#actual-evapotranspiration-aet-times-soil-properties-interaction" title="Permanent link">¶</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    subgraph ARID ["1. Water-Limited / Arid Regimes (AET &lt; 66)"]
+        A1["Sparse Riparian Cover&lt;br/&gt;Low Catchment Moisture"]
+        A2["&lt;b&gt;Negative SHAP Contribution (-0.7 to 0.0 m)&lt;/b&gt;&lt;br/&gt;Wide, Shallow Cross-Sections"]
+        A1 --&gt; A2
+    end
+
+    subgraph HUMID ["2. Energy-Rich / Humid Regimes (AET &gt; 66)"]
+        H1["Dense Riparian Root Stabilization&lt;br/&gt;Cohesive Clay-Rich Soils (Soil pc2)"]
+        H2["&lt;b&gt;Positive SHAP Contribution (+0.5 to +3.0+ m)&lt;/b&gt;&lt;br/&gt;Deep, Well-Defined Channel Thalwegs"]
+        H1 --&gt; H2
+    end
+
+    ARID ~~~ HUMID
+
+    class ARID highlight-blue;
+    class HUMID highlight-teal;
+    class A1 highlight-blue;
+    class A2 highlight-blue;
+    class H1 highlight-teal;
+    class H2 highlight-teal;</code></pre>
+<h4 id="physical-mechanisms-revealed">Physical Mechanisms Revealed:<a class="headerlink" href="#physical-mechanisms-revealed" title="Permanent link">¶</a></h4>
+<ol>
+<li><strong>Threshold at <span class="arithmatex">\(\text{AET} \approx 66\)</span></strong>:</li>
+<li>In arid and water-limited catchments (<span class="arithmatex">\(\text{AET} &lt; 66\)</span>), SHAP values remain negative (<span class="arithmatex">\(-0.7\text{ to }0.0\text{ m}\)</span>), indicating that low vegetative density and non-cohesive soils produce wider, shallower channels.</li>
+<li>At <span class="arithmatex">\(\text{AET} \approx 66\)</span>, the interaction exhibits a sharp upward transition where moisture availability supports dense bank-stabilizing root matrices.</li>
+<li><strong>Amplification by Soil Characteristics (<code>Soil pc2</code>)</strong>:</li>
+<li>Above <span class="arithmatex">\(\text{AET} &gt; 66\)</span>, catchments with high <code>Soil pc2</code> values (pink/red points) exhibit substantial positive depth adjustments (<span class="arithmatex">\(\text{SHAP} &gt; +1.0\text{ to }+3.0\text{ m}\)</span>), reflecting deeper, cohesive channels where lateral erosion is constrained and flow energy is directed into vertical incision.</li>
+</ol>
+<hr>
+<h2 id="synthesis-with-fluvial-geomorphic-theory">Synthesis with Fluvial Geomorphic Theory<a class="headerlink" href="#synthesis-with-fluvial-geomorphic-theory" title="Permanent link">¶</a></h2>
+<p>The learned relationships within the v1.0.0 machine learning ensemble closely replicate classical geomorphic balance principles:</p>
+<pre class="mermaid"><code>flowchart TD
+    Q_VOL["&lt;b&gt;1. Volumetric Discharge (Q&lt;sub&gt;bf&lt;/sub&gt;, BFI)&lt;/b&gt;&lt;br/&gt;• Dominant positive driver of depth capacity&lt;br/&gt;• Sustains defined in-channel thalweg"]
+
+    SLOPE_ELEV["&lt;b&gt;2. Slope &amp; Elevation Dynamics&lt;/b&gt;&lt;br/&gt;• High slope accelerates velocity (m &amp;uparrow;)&lt;br/&gt;• Reduces depth exponent (f &amp;downarrow;) by continuity"]
+
+    SOIL_VEG["&lt;b&gt;3. Soil Cohesion &amp; AET Interaction&lt;/b&gt;&lt;br/&gt;• High AET + cohesive soils restrict widening&lt;br/&gt;• Flow energy forced into vertical deepening"]
+
+    Q_VOL --&gt; DEPTH["&lt;b&gt;Continuous Channel Depth (Y)&lt;/b&gt;&lt;br/&gt;Y = c &amp;middot; Q&lt;sup&gt;f&lt;/sup&gt;"]
+    SLOPE_ELEV --&gt; DEPTH
+    SOIL_VEG --&gt; DEPTH
+
+    class DEPTH highlight-orange;
+    class Q_VOL highlight-blue;
+    class SLOPE_ELEV highlight-teal;
+    class SOIL_VEG highlight-teal;</code></pre>
+<ol>
+<li><strong>Lane's Balance &amp; Energy Dissipation</strong>:</li>
+<li>The model captures how steep channels dissipate kinetic energy through velocity rather than stage height, directly conforming to hydraulic geometry continuity (<span class="arithmatex">\(b + f + m = 1.0\)</span>).</li>
+<li><strong>Boundary Shear Stress Partitioning</strong>:</li>
+<li>Geotechnical soil parameters and hydroclimatic variables determine whether boundary shear stress (<span class="arithmatex">\(\tau_0 = \gamma R S\)</span>) is accommodated through lateral bank collapse or vertical bed downcutting.</li>
+</ol>
+<hr>
+<h2 id="section-navigation">Section Navigation<a class="headerlink" href="#section-navigation" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="../">Depth v1.0.0 Overview</a>: Problem statement, FHG continuity formulation, and summary.</li>
+<li><a href="../models/">Model Architecture</a>: Candidate ML models, feature engineering, and the 3-tier Stacking Meta-Learner.</li>
+<li><a href="../skill/">Model Skill &amp; Evaluation</a>: Continental USGS validation, NNSE distributions, max flow diagnostics, and literature benchmarking.</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+    developed by <strong>Arash Modaresi Rad</strong>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/NOAA-OWP/channel-shape-ML" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.indexes", "content.tabs.link", "search.suggest", "search.highlight", "toc.follow", "content.code.copy", "header.autohide"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/js/neural-watershed.js"></script>
+      
+        <script src="../../../assets/js/version-select.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

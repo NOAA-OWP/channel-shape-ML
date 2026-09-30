@@ -1,0 +1,1524 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Physics-informed multi-stage ML pipeline for continental-scale channel geometry and Manning's roughness estimation">
+      
+      
+      
+        <link rel="canonical" href="https://noaa-owp.github.io/channel-shape-ML/v1.0.0/y/">
+      
+      
+        <link rel="prev" href="../tw/xai/">
+      
+      
+        <link rel="next" href="models/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/noaa_digital_logo-2022.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Depth (Y) — v1.0.0 Overview - ML Channel Geometry &amp; Hydraulics Parameterization</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/css/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#continental-river-depth-parameterization" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <!-- 1. Mobile Drawer Toggle (Hamburger 3 lines) -->
+    <label class="md-header__button md-icon header-drawer-btn" for="__drawer" aria-label="Open Navigation Menu">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+
+    <!-- 2. Dual Brand Logos (NOAA & Lynker) -->
+    <a href="../.." title="ML Channel Geometry &amp; Hydraulics Parameterization" class="md-header__button md-logo" aria-label="ML Channel Geometry &amp; Hydraulics Parameterization" data-md-component="logo">
+      <div class="header-dual-logos">
+  <img src="../../assets/noaa_digital_logo-2022.png" alt="NOAA Logo" class="header-brand-logo noaa">
+  <img src="../../assets/Lynker-Primary-Logo.png" alt="Lynker Logo" class="header-brand-logo lynker">
+</div>
+    </a>
+
+    <!-- 3. Site Title (Flexes and truncates smoothly) -->
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ML Channel Geometry &amp; Hydraulics Parameterization
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Depth (Y) — v1.0.0 Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Search -->
+    
+      
+      
+        <label class="md-header__button md-icon header-search-btn" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+
+    <!-- 5. Top-Right Model Version Selector -->
+    <div class="header-version-container">
+      <div class="header-version-pill" title="Model Release Version">
+        <span class="version-dot"></span>
+        <label for="header-version-select" class="version-label">Model:</label>
+        <select id="header-version-select" class="header-version-select">
+          <option value="v2.0.0">v2.0.0</option>
+          <option value="v1.0.0">v1.0.0</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 6. Dark / Light Mode Palette Toggle -->
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="teal" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="teal" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+
+    <!-- 7. GitHub Repository Button -->
+    
+      <div class="md-header__source">
+        <a href="https://github.com/NOAA-OWP/channel-shape-ML" title="GitHub Repository" class="header-github-btn" target="_blank" rel="noopener">
+  <svg class="header-github-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+  </svg>
+  <span class="header-github-name">NOAA-OWP/channel-shape-ML</span>
+</a>
+      </div>
+    
+  </nav>
+
+  
+    
+      
+
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      <!-- 1. Home Tab -->
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link" data-tab="home">
+          Home
+        </a>
+      </li>
+
+      <!-- 2. Pipeline Overview Tab -->
+      <li class="md-tabs__item">
+        
+          <a href="../overview/" class="md-tabs__link" data-tab="overview">
+            Pipeline Overview
+          </a>
+        
+      </li>
+
+      <!-- 3. TopWidth Tab -->
+      <li class="md-tabs__item">
+        
+          <a href="../tw/" class="md-tabs__link" data-tab="tw">
+            TopWidth
+          </a>
+        
+      </li>
+
+      <!-- 4. Depth Tab -->
+      <li class="md-tabs__item">
+        
+          <a href="./" class="md-tabs__link md-tabs__link--active" data-tab="y">
+            Depth
+          </a>
+        
+      </li>
+
+      <!-- 5. Shape Tab -->
+      <li class="md-tabs__item">
+        
+          <a href="../r/" class="md-tabs__link" data-tab="r">
+            Shape
+          </a>
+        
+      </li>
+
+      <!-- 6. Roughness Tab -->
+      <li class="md-tabs__item">
+        
+          <a href="../n/" class="md-tabs__link" data-tab="n">
+            Roughness
+          </a>
+        
+      </li>
+
+      <!-- 7. References Tab -->
+      <li class="md-tabs__item">
+        <a href="../../references/" class="md-tabs__link" data-tab="references">
+          References
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+
+
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+  
+    
+    <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+      <!-- Edge Indicator Handle (Visible at left edge when drawer is auto-hidden) -->
+      <label class="drawer-edge-handle" for="__drawer" title="Open navigation menu" aria-label="Open navigation menu">
+        <span class="drawer-edge-handle-bar"></span>
+        <svg class="drawer-edge-handle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path>
+        </svg>
+        <span class="drawer-edge-handle-label">Menu</span>
+      </label>
+
+      <!-- Full-Height Left Edge Hover Zone -->
+      <div class="drawer-edge-hover-zone" aria-hidden="true"></div>
+
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner">
+          
+
+
+  
+
+
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <!-- Mobile / Tablet Drawer Header Box -->
+  <div class="drawer-header-box">
+    <!-- Row 1: Dual Brand Logos on left, Dark/Light Theme Toggle and Close Button on right -->
+    <div class="drawer-header-top">
+      <a href="../.." title="ML Channel Geometry &amp; Hydraulics Parameterization" class="drawer-brand-link" aria-label="ML Channel Geometry &amp; Hydraulics Parameterization">
+        <div class="header-dual-logos">
+          <img src="../../assets/noaa_digital_logo-2022.png" alt="NOAA Logo" class="header-brand-logo noaa">
+          <img src="../../assets/Lynker-Primary-Logo.png" alt="Lynker Logo" class="header-brand-logo lynker">
+        </div>
+      </a>
+
+      <div class="drawer-header-actions">
+        <!-- Dark / Light Theme Toggle Button -->
+        <button type="button" class="drawer-theme-toggle" id="drawer-theme-toggle" title="Toggle dark/light mode" aria-label="Toggle dark/light mode">
+          <!-- Sun icon (shown in dark mode to switch to light mode) -->
+          <svg class="drawer-icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path>
+          </svg>
+          <!-- Moon icon (shown in light mode to switch to dark mode) -->
+          <svg class="drawer-icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path>
+          </svg>
+        </button>
+
+        <!-- Close Drawer Button (X) -->
+        <label class="drawer-close-btn" for="__drawer" title="Close drawer" aria-label="Close navigation drawer">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path>
+          </svg>
+        </label>
+      </div>
+    </div>
+
+    <!-- Row 2: Site Title (Clean and unhampered, non-overlapping) -->
+    <div class="drawer-title-row">
+      <span class="drawer-site-title">ML Channel Geometry &amp; Hydraulics Parameterization</span>
+    </div>
+
+    <!-- Row 3: Model Version Selector Pill -->
+    <div class="drawer-version-pill-container">
+      <div class="header-version-pill drawer-version-pill" title="Model Release Version">
+        <span class="version-dot"></span>
+        <label for="drawer-version-select" class="version-label">Model:</label>
+        <select id="drawer-version-select" class="header-version-select drawer-version-select">
+          <option value="v2.0.0">v2.0.0</option>
+          <option value="v1.0.0">v1.0.0</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  
+    <div class="md-nav__source drawer-nav-source">
+      <a href="https://github.com/NOAA-OWP/channel-shape-ML" title="GitHub Repository" class="header-github-btn" target="_blank" rel="noopener">
+  <svg class="header-github-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+  </svg>
+  <span class="header-github-name">NOAA-OWP/channel-shape-ML</span>
+</a>
+    </div>
+  
+
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+            
+            
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CONUS-FHG v1.0.0 Release
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+          
+            
+            
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_v1_2">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../overview/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline Overview
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_v1_2" id="__nav_v1_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_v1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_v1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pipeline Overview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/data-sources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Sources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methodology &amp; Ensemble
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+          
+            
+            
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_v1_3">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../tw/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TopWidth
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_v1_3" id="__nav_v1_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_v1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_v1_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    TopWidth
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tw/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tw/skill/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tw/xai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explainability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+          
+            
+            
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_v1_4" checked="">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="./" class="md-nav__link md-nav__link--active">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Depth
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link md-nav__link--active" for="__nav_v1_4" id="__nav_v1_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_v1_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_v1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Depth
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="skill/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="xai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explainability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+          
+            
+            
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_v1_5">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../r/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shape
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_v1_5" id="__nav_v1_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_v1_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_v1_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Shape
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../r/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../r/skill/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../r/xai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explainability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+          
+            
+            
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_v1_6">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../n/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roughness
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_v1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_v1_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Roughness
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+          
+        
+      
+        
+      
+    
+  </ul>
+
+  <!-- Seamless Frameless Left Sidebar River Background -->
+  <div class="sidebar-watershed-container">
+    <canvas id="sidebar-watershed-canvas"></canvas>
+  </div>
+</nav>
+        </div>
+      </div>
+    </div>
+  
+
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="continental-river-depth-parameterization">Continental River Depth Parameterization<a class="headerlink" href="#continental-river-depth-parameterization" title="Permanent link">¶</a></h1>
+<hr>
+<h2 id="executive-summary">Executive Summary<a class="headerlink" href="#executive-summary" title="Permanent link">¶</a></h2>
+<p>River channel depth (<span class="arithmatex">\(Y\)</span> or <span class="arithmatex">\(d\)</span>) is the primary vertical dimension governing in-channel conveyance capacity, bed shear stress distribution, and sediment transport dynamics. Across continental river networks, accurate representation of in-channel and bankfull depth is severely hindered by the <strong>missing bathymetry problem</strong> in digital elevation models (DEMs). </p>
+<p>Version <strong>v1.0.0</strong> of the FEMA/NOAA-OWP channel geometry framework introduces a machine learning framework to predict in-channel and bankfull channel depths (<strong><span class="arithmatex">\(Y_{\text{in}}\)</span> at 100% AEP</strong> and <strong><span class="arithmatex">\(Y_{\text{bf}}\)</span> at 50% AEP</strong>) and hydraulic geometry scaling exponents across all <strong>2.7 million+ Reference Fabric COMID stream reaches</strong> in the Conterminous United States (CONUS).</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph INPUTS ["1. Continental Environmental Predictors (116 Features)"]
+        direction LR
+        HYD["&lt;b&gt;Hydrofabric &amp; Topology&lt;/b&gt;&lt;br/&gt;Stream Order, Arbolate Sum, Length"]
+        SOIL["&lt;b&gt;Soil &amp; Geotechnical&lt;/b&gt;&lt;br/&gt;Clay %, K&lt;sub&gt;sat&lt;/sub&gt;, Moisture &amp;theta;&lt;sub&gt;s&lt;/sub&gt;"]
+        DEM["&lt;b&gt;DEM &amp; Terrain&lt;/b&gt;&lt;br/&gt;Slope, Relief, TWI Index"]
+        CLIM["&lt;b&gt;Climate &amp; Flow Dynamics&lt;/b&gt;&lt;br/&gt;MAP, Aridity, NWM 2.1 Frequencies"]
+    end
+
+    subgraph REDUCTION ["2. Dimensionality Reduction &amp; Feature Optimization"]
+        AE["&lt;b&gt;Expert Screening &amp;bull; Elbow Method &amp;bull; PCA Decompositions&lt;/b&gt;&lt;br/&gt;Compresses 116 environmental predictors into 30 parsimonious, orthogonal features"]
+    end
+
+    subgraph ENSEMBLE ["3. Multi-Tier Modeling Cascade"]
+        direction LR
+        subgraph T1 ["Tier 1: Best Single Model"]
+            M1["&lt;b&gt;Tuned GBDT Regressor&lt;/b&gt;&lt;br/&gt;&lt;i&gt;(e.g., CatBoost / XGBoost)&lt;/i&gt;"]
+        end
+
+        subgraph T2 ["Tier 2: Voting Ensemble"]
+            M2["&lt;b&gt;Consensus Average&lt;/b&gt;&lt;br/&gt;Mean of top 6&amp;ndash;8 tuned models"]
+        end
+
+        subgraph T3 ["Tier 3: Meta-Learner"]
+            M3["&lt;b&gt;Stacking Super-Learner&lt;/b&gt;&lt;br/&gt;Level-1 meta-model on OOF outputs"]
+        end
+    end
+
+    subgraph OUTPUTS ["4. 100% &amp; 50% AEP Depth &amp; AHG Exponent Parameterization"]
+        direction LR
+        DEPTH_IN["&lt;b&gt;In-Channel Depth (100% AEP)&lt;/b&gt;&lt;br/&gt;&lt;code&gt;Y&lt;sub&gt;in&lt;/sub&gt;&lt;/code&gt; at 100% AEP flow (Q&lt;sub&gt;100%&lt;/sub&gt;)&lt;br/&gt;&lt;i&gt;Mean annual active in-channel depth&lt;/i&gt;"]
+        DEPTH_BF["&lt;b&gt;Bankfull Depth (50% AEP)&lt;/b&gt;&lt;br/&gt;&lt;code&gt;Y&lt;sub&gt;bf&lt;/sub&gt;&lt;/code&gt; at 50% AEP flow (Q&lt;sub&gt;50%&lt;/sub&gt;)&lt;br/&gt;&lt;i&gt;2-year channel-forming bankfull depth&lt;/i&gt;"]
+        AHG_F["&lt;b&gt;AHG Depth Exponent (f)&lt;/b&gt;&lt;br/&gt;&lt;code&gt;f = &amp;part;ln(Y)/&amp;part;ln(Q)&lt;/code&gt;&lt;br/&gt;&lt;i&gt;(Used with b for Dingman r = f / b)&lt;/i&gt;"]
+    end
+
+    INPUTS ==&gt; REDUCTION
+    REDUCTION ==&gt; ENSEMBLE
+    ENSEMBLE ==&gt; OUTPUTS
+
+    class INPUTS highlight-blue;
+    class REDUCTION highlight-blue;
+    class T1 highlight-blue;
+    class T2 highlight-teal;
+    class T3 highlight-orange;
+    class DEPTH_IN highlight-teal;
+    class DEPTH_BF highlight-orange;
+    class AHG_F highlight-blue;</code></pre>
+<hr>
+<h2 id="key-highlights-performance-metrics">Key Highlights &amp; Performance Metrics<a class="headerlink" href="#key-highlights-performance-metrics" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Metric / Dimension</th>
+<th style="text-align: left;">Value / Finding</th>
+<th style="text-align: left;">Scientific Significance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>CONUS Scope</strong></td>
+<td style="text-align: left;"><strong>2,770,000+ Reaches</strong></td>
+<td style="text-align: left;">Complete high-resolution coverage across all Reference Fabric COMIDs</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Observation Base</strong></td>
+<td style="text-align: left;"><strong>3,500+ USGS / HYDRoSWOT ADCP Sites</strong></td>
+<td style="text-align: left;">Quality-screened acoustic Doppler current profiler velocity-depth surveys (<span class="arithmatex">\(R^2 \ge 0.80\)</span>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Median Test NNSE</strong></td>
+<td style="text-align: left;"><strong><span class="arithmatex">\(\mathbf{&gt; 0.88}\)</span> (Meta-Learner)</strong></td>
+<td style="text-align: left;">Normalized Nash-Sutcliffe Efficiency demonstrating high predictive accuracy</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Extreme Flow Reliability</strong></td>
+<td style="text-align: left;"><strong><span class="arithmatex">\(R^2 = 0.84\)</span> at <span class="arithmatex">\(Q_{\max}\)</span></strong></td>
+<td style="text-align: left;">Accurate generalization at maximum observed historical flows without catastrophic saturation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Regional Benchmark</strong></td>
+<td style="text-align: left;"><strong>+28% to +45% Gain over Literature</strong></td>
+<td style="text-align: left;">Statistically outperforms Blackburn-Lynch et al. (2017) and Bieger et al. (2015) across all 20 HLRs</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Stacking Superiority</strong></td>
+<td style="text-align: left;"><strong>Meta-Learner &gt; Voting &gt; Best Single</strong></td>
+<td style="text-align: left;">Stacked meta-learner reduces residual variance by learning regional model error correlations</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="the-missing-bathymetry-problem">The Missing Bathymetry Problem<a class="headerlink" href="#the-missing-bathymetry-problem" title="Permanent link">¶</a></h2>
+<p>Digital Elevation Models derived from spaceborne radar (e.g., SRTM, NASADEM) or airborne Near-Infrared (NIR) LiDAR effectively capture floodplain and valley topography. However, infrared and optical wavelengths cannot penetrate open water bodies. Consequently, elevation grids represent the <strong>water surface elevation</strong> at the time of data acquisition rather than the true channel bed.</p>
+<div class="admonition danger">
+<p class="admonition-title">Hydraulic Consequences of Missing Bathymetry</p>
+<p>Omitting in-channel bathymetry causes 1D and 2D hydrodynamic engines (e.g., HEC-RAS, NOAA NextGen FIM) to:</p>
+<ol>
+<li><strong>Underestimate In-Channel Conveyance Area (<span class="arithmatex">\(A\)</span>)</strong>: Low-to-moderate flows prematurely spill into overbank zones.</li>
+<li><strong>Overestimate Flood Extent and Inundation Depth</strong>: Water levels artificially rise above natural flood thresholds.</li>
+<li><strong>Distort Boundary Shear Stress (<span class="arithmatex">\(\tau_0 = \gamma R S\)</span>)</strong>: Precludes realistic sediment transport, bed mobility, and roughness routing.</li>
+</ol>
+</div>
+<p>The <strong>Functional Hydraulic Geometry (FHG)</strong> framework solves this fundamental data gap by learning predictive relationships between hydro-environmental catchment drivers and the parameters governing channel depth across discharge regimes.</p>
+<hr>
+<h2 id="two-flow-regimes-in-channel-100-aep-vs-bankfull-50-aep-depth">Two Flow Regimes: In-Channel (100% AEP) vs. Bankfull (50% AEP) Depth<a class="headerlink" href="#two-flow-regimes-in-channel-100-aep-vs-bankfull-50-aep-depth" title="Permanent link">¶</a></h2>
+<p>The v1.0.0 framework parameterizes channel depth under two fundamental hydrologic benchmarks defined by USGS NWIS flood frequency annual exceedance probabilities:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Dimension</th>
+<th style="text-align: left;">Governing Discharge</th>
+<th style="text-align: left;">Hydrologic Definition</th>
+<th style="text-align: left;">Training Data Derivation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>In-Channel Depth (<span class="arithmatex">\(Y_{\text{in}}\)</span>)</strong></td>
+<td style="text-align: left;"><strong>100% AEP Discharge (<span class="arithmatex">\(Q_{\text{100\% AEP}}\)</span>)</strong></td>
+<td style="text-align: left;">1-year recurrence interval / mean annual flow within active banks.</td>
+<td style="text-align: left;">Extracted directly from USGS HYDRoSWOT ADCP stage-discharge rating curves at the 100% AEP flow threshold.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Bankfull Depth (<span class="arithmatex">\(Y_{\text{bf}}\)</span>)</strong></td>
+<td style="text-align: left;"><strong>50% AEP Discharge (<span class="arithmatex">\(Q_{\text{50\% AEP}}\)</span>)</strong></td>
+<td style="text-align: left;">2-year recurrence interval (<span class="arithmatex">\(Q_2\)</span>) channel-forming bankfull flow.</td>
+<td style="text-align: left;">Extracted directly from USGS HYDRoSWOT ADCP stage-discharge rating curves at the 50% AEP flow threshold.</td>
+</tr>
+</tbody>
+</table>
+<p>The ML ensemble directly learns and predicts both <strong><span class="arithmatex">\(Y_{\text{in}}\)</span></strong> (at 100% AEP) and <strong><span class="arithmatex">\(Y_{\text{bf}}\)</span></strong> (at 50% AEP) across all CONUS reaches. In parallel, continuous At-a-station Hydraulic Geometry (AHG) power laws are fitted to the multi-flow ADCP soundings to extract the depth scaling exponent <span class="arithmatex">\(f\)</span>, which is coupled with width exponent <span class="arithmatex">\(b\)</span> exclusively to derive the Dingman cross-sectional shape parameter (<span class="arithmatex">\(r = f/b\)</span>).</p>
+<hr>
+<h2 id="theoretical-formulation-at-a-station-hydraulic-geometry-continuity">Theoretical Formulation: At-a-Station Hydraulic Geometry &amp; Continuity<a class="headerlink" href="#theoretical-formulation-at-a-station-hydraulic-geometry-continuity" title="Permanent link">¶</a></h2>
+<p>Following Leopold &amp; Maddock (1953), hydraulic cross-section variables (Top Width <span class="arithmatex">\(W\)</span>, Mean Depth <span class="arithmatex">\(Y\)</span>, and Mean Velocity <span class="arithmatex">\(V\)</span>) scale with discharge (<span class="arithmatex">\(Q\)</span>) as power-law functions:</p>
+<div class="arithmatex">\[
+\begin{aligned}
+W &amp;= a \cdot Q^b \\
+Y &amp;= c \cdot Q^f \\
+V &amp;= k \cdot Q^m
+\end{aligned}
+\]</div>
+<h3 id="continuity-constraints-exponent-sum-rules">Continuity Constraints &amp; Exponent Sum Rules<a class="headerlink" href="#continuity-constraints-exponent-sum-rules" title="Permanent link">¶</a></h3>
+<p>By conservation of mass for open channel flow (<span class="arithmatex">\(Q = W \cdot Y \cdot V = (a \cdot c \cdot k) \cdot Q^{b + f + m}\)</span>), exact continuity constraints must hold:</p>
+<div class="arithmatex">\[
+a \cdot c \cdot k = 1.0 \quad \text{and} \quad b + f + m = 1.0
+\]</div>
+<h3 id="role-of-depth-exponent-f-in-shape-parameterization">Role of Depth Exponent (<span class="arithmatex">\(f\)</span>) in Shape Parameterization<a class="headerlink" href="#role-of-depth-exponent-f-in-shape-parameterization" title="Permanent link">¶</a></h3>
+<p>The depth scaling exponent <span class="arithmatex">\(f\)</span> governs the rate of vertical channel deepening with flow (<span class="arithmatex">\(\frac{dY}{dQ} = c \cdot f \cdot Q^{f-1}\)</span>). In the v1.0.0 pipeline, <span class="arithmatex">\(f\)</span> is predicted to calculate the continuous <strong>Dingman cross-sectional shape exponent</strong>:</p>
+<div class="arithmatex">\[
+r = \frac{f}{b} = \frac{1 - b}{b}
+\]</div>
+<p>where higher <span class="arithmatex">\(f/b\)</span> ratios indicate entrenched, steep-walled channels and lower ratios denote wide, shallow alluvial channels.</p>
+<hr>
+<h2 id="continental-predictions-across-conus">Continental Predictions Across CONUS<a class="headerlink" href="#continental-predictions-across-conus" title="Permanent link">¶</a></h2>
+<p>Using the trained multi-tier ensemble, FHG exponent <span class="arithmatex">\(f\)</span>, coefficient <span class="arithmatex">\(c\)</span>, and bankfull depth <span class="arithmatex">\(Y_{bf}\)</span> were predicted for all ~2.77M COMID reaches across the Conterminous United States:</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../../assets/images/v1.0.0/y/Fig3_y.png" data-desc-position="bottom"><img alt="Continental Reach Predictions of Channel Depth Parameters across CONUS" loading="lazy" src="../../assets/images/v1.0.0/y/Fig3_y.png"></a></p>
+<h3 id="continental-geomorphic-patterns">Continental Geomorphic Patterns<a class="headerlink" href="#continental-geomorphic-patterns" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Mountainous and Headwater Systems (Rockies, Cascades, Appalachians)</strong>:<ul>
+<li>Characterized by lower <span class="arithmatex">\(f\)</span> values and higher bed roughness, reflecting steep valley confinement and coarse cobble/boulder beds where flow energy is dissipated in turbulent resistance rather than progressive channel incision.</li>
+</ul>
+</li>
+<li><strong>Alluvial Lowlands and Great Plains (Mississippi, Missouri, Ohio River Basins)</strong>:<ul>
+<li>Exhibit smooth downstream transitions with stable <span class="arithmatex">\(f \approx 0.35\text{--}0.42\)</span>, indicating equilibrium alluvial regimes where depth scales predictably with cumulative discharge.</li>
+</ul>
+</li>
+<li><strong>Coastal Plains &amp; Semi-Arid Southwest</strong>:<ul>
+<li>Display localized variability driven by sandy, highly erodible bank materials (promoting high width adjustment <span class="arithmatex">\(b\)</span>) versus highly cohesive clay-rich soils (promoting vertical deepening <span class="arithmatex">\(f\)</span>).</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="multi-tier-modeling-architecture">Multi-Tier Modeling Architecture<a class="headerlink" href="#multi-tier-modeling-architecture" title="Permanent link">¶</a></h2>
+<p>To overcome the limitations of individual ML algorithms, v1.0.0 deploys a three-tier stacked generalization framework:</p>
+<pre class="mermaid"><code>graph TD
+    subgraph T1 ["Tier 1: Individual Base Models (Hyperparameter-Tuned)"]
+        B1["XGBoost"]
+        B2["LightGBM"]
+        B3["CatBoost"]
+        B4["Random Forest"]
+        B5["Extra Trees"]
+        B6["Deep Neural Net"]
+    end
+
+    subgraph T2 ["Tier 2: Voting Ensemble"]
+        VE["Equal / Weighted Average&lt;br/&gt;&amp;Sigma; w&lt;sub&gt;i&lt;/sub&gt; &amp;middot; &amp;ycirc;&lt;sub&gt;i&lt;/sub&gt;"]
+    end
+
+    subgraph T3 ["Tier 3: Meta-Learner (Stacked Generalization)"]
+        ML["2nd-Level Regressor&lt;br/&gt;Learns Non-Linear Error Residuals"]
+    end
+
+    T1 --&gt; VE
+    T1 --&gt; ML
+
+    class T3 highlight-blue;
+    class ML highlight-blue;</code></pre>
+<ol>
+<li><strong>Tier 1: Best Individual Model</strong>: Out-of-bag tuned Gradient Boosted Decision Tree (GBDT).</li>
+<li><strong>Tier 2: Voting Ensemble</strong>: Blends predictions across the top 6–8 tuned models to mitigate individual algorithm variance.</li>
+<li><strong>Tier 3:  Meta-Learner</strong>: Learns how individual model errors vary with catchment physiography (e.g., favoring tree models in high-relief headwaters and neural architectures in low-gradient basins), delivering the highest overall skill.</li>
+</ol>
+<hr>
+<h2 id="section-navigation">Section Navigation<a class="headerlink" href="#section-navigation" title="Permanent link">¶</a></h2>
+<p>Explore the complete v1.0.0 Depth parameterization documentation across the dedicated technical sections:</p>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v2H7a2 2 0 0 0-2 2v2H3v2h2v2H3v2h2v2a2 2 0 0 0 2 2h2v2h2v-2h2v2h2v-2h2a2 2 0 0 0 2-2v-2h2v-2h-2v-2h2V9h-2V7a2 2 0 0 0-2-2h-2V3h-2v2h-2V3M8 9h3.5v1.5h-3v.75h2a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m4.5 0H14v2h1.5V9H17v6h-1.5v-2.5h-3m-4 .25v.75H10v-.75"></path></svg></span> <strong><a href="models/">Model Architecture</a></strong></p>
+<hr>
+<p>Detailed breakdown of candidate ML models, feature engineering, elbow method and PCA dimensionality reduction, and the Stacking Meta-Learner architecture.</p>
+<p><a href="models/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"></path></svg></span> View Model Architecture</a></p>
+</li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 19v1h18v2H2V2h2v15c3 0 6-2 8.1-5.6 3-5 6.3-7.4 9.9-7.4v2c-2.8 0-5.5 2.1-8.1 6.5C11.3 16.6 7.7 19 4 19"></path></svg></span> <strong><a href="skill/">Model Skill &amp; Evaluation</a></strong></p>
+<hr>
+<p>Continental USGS station validation, Normalized NSE (NNSE) distributions, extreme flow (<span class="arithmatex">\(Q_{\max}\)</span>) scatter diagnostics, and benchmarking against Blackburn-Lynch (2017), Bieger (2015), and Doyle (2023).</p>
+<p><a href="skill/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"></path></svg></span> View Model Performance</a></p>
+</li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.33 12.91c.09 1.55-.62 3.04-1.89 3.95l.77 1.49c.23.45.26.98.06 1.45-.19.47-.58.84-1.06 1l-.79.25a1.687 1.687 0 0 1-1.86-.55L14.44 18c-.89-.15-1.73-.53-2.44-1.1-.5.15-1 .23-1.5.23-.88 0-1.76-.27-2.5-.79-.53.16-1.07.23-1.62.22-.79.01-1.57-.15-2.3-.45a4.1 4.1 0 0 1-2.43-3.61c-.08-.72.04-1.45.35-2.11-.29-.75-.32-1.57-.07-2.33C2.3 7.11 3 6.32 3.87 5.82c.58-1.69 2.21-2.82 4-2.7 1.6-1.5 4.05-1.66 5.83-.37.42-.11.86-.17 1.3-.17 1.36-.03 2.65.57 3.5 1.64 2.04.53 3.5 2.35 3.58 4.47.05 1.11-.25 2.2-.86 3.13.07.36.11.72.11 1.09m-5-1.41c.57.07 1.02.5 1.02 1.07a1 1 0 0 1-1 1h-.63c-.32.9-.88 1.69-1.62 2.29.25.09.51.14.77.21 5.13-.07 4.53-3.2 4.53-3.25a2.59 2.59 0 0 0-2.69-2.49 1 1 0 0 1-1-1 1 1 0 0 1 1-1c1.23.03 2.41.49 3.33 1.3.05-.29.08-.59.08-.89-.06-1.24-.62-2.32-2.87-2.53-1.25-2.96-4.4-1.32-4.4-.4-.03.23.21.72.25.75a1 1 0 0 1 1 1c0 .55-.45 1-1 1-.53-.02-1.03-.22-1.43-.56-.48.31-1.03.5-1.6.56-.57.05-1.04-.35-1.07-.9a.97.97 0 0 1 .88-1.1c.16-.02.94-.14.94-.77 0-.66.25-1.29.68-1.79-.92-.25-1.91.08-2.91 1.29C6.75 5 6 5.25 5.45 7.2 4.5 7.67 4 8 3.78 9c1.08-.22 2.19-.13 3.22.25.5.19.78.75.59 1.29-.19.52-.77.78-1.29.59-.73-.32-1.55-.34-2.3-.06-.32.27-.32.83-.32 1.27 0 .74.37 1.43 1 1.83.53.27 1.12.41 1.71.4q-.225-.39-.39-.81a1.038 1.038 0 0 1 1.96-.68c.4 1.14 1.42 1.92 2.62 2.05 1.37-.07 2.59-.88 3.19-2.13.23-1.38 1.34-1.5 2.56-1.5m2 7.47-.62-1.3-.71.16 1 1.25zm-4.65-8.61a1 1 0 0 0-.91-1.03c-.71-.04-1.4.2-1.93.67-.57.58-.87 1.38-.84 2.19a1 1 0 0 0 1 1c.57 0 1-.45 1-1 0-.27.07-.54.23-.76.12-.1.27-.15.43-.15.55.03 1.02-.38 1.02-.92"></path></svg></span> <strong><a href="xai/">Explainable AI (XAI)</a></strong></p>
+<hr>
+<p>Game-theoretic SHAP global feature attributions, non-linear interaction dependencies, and physical interpretations connecting environmental drivers to channel depth dynamics.</p>
+<p><a href="xai/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"></path></svg></span> Explore Explainability</a></p>
+</li>
+</ul>
+</div>
+<hr>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">¶</a></h2>
+<ol>
+<li><strong>Modaresi Rad, A., et al. (2024)</strong>. <em>Enhancing River Channel Dimension and Bathymetry Estimates Across Continental Scale Using Machine Learning and Functional Hydraulic Geometry</em>. Journal of Geophysical Research: Machine Learning and Computation, 1(3), e2024JH000173. <a href="https://doi.org/10.1029/2024JH000173">doi:10.1029/2024JH000173</a></li>
+<li><strong>Leopold, L. B., &amp; Maddock, T. (1953)</strong>. <em>The hydraulic geometry of stream channels and some physiographic implications</em>. US Geological Survey Professional Paper 252.</li>
+<li><strong>Blackburn-Lynch, W., et al. (2017)</strong>. <em>Development of regional hydraulic geometry curves for the contiguous United States</em>. Journal of the American Water Resources Association, 53(4), 903–928.</li>
+<li><strong>Bieger, K., et al. (2015)</strong>. <em>Development of bankfull hydraulic geometry equations for the national water model</em>. Journal of the American Water Resources Association, 51(3), 842–856.</li>
+<li><strong>Doyle, J. M., et al. (2023)</strong>. <em>Continental-scale river geometry prediction using machine learning</em>. Water Resources Research, 59(4), e2022WR033621.</li>
+</ol>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+    developed by <strong>Arash Modaresi Rad</strong>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/NOAA-OWP/channel-shape-ML" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.indexes", "content.tabs.link", "search.suggest", "search.highlight", "toc.follow", "content.code.copy", "header.autohide"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/js/neural-watershed.js"></script>
+      
+        <script src="../../assets/js/version-select.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
