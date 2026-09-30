@@ -43,3 +43,13 @@ clean:
 	find . -type f -name "*.pyc" -delete
 	find . -type f -name "*.pyo" -delete
 	find . -type f -name "*.pyd" -delete
+
+.PHONY: docs-serve docs-build
+
+docs-serve:
+	pip install -r requirements-docs.txt
+	mkdocs serve
+
+docs-build:
+	pip install -r requirements-docs.txt
+	mkdocs build --strict

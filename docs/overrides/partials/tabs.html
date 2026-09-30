@@ -1,0 +1,92 @@
+{#-
+  Custom Tabs template:
+  Always renders the 7 constant tabs:
+  Home, Pipeline Overview, TopWidth, Depth, Shape, Roughness, References.
+  Dynamically links to v1.0.0 sub-paths when in v1.0.0 mode or v2.0.0 sub-paths when in v2.0.0 mode.
+-#}
+{% set is_v1 = "v1.0.0/" in page.url %}
+
+<nav class="md-tabs" aria-label="{{ lang.t('tabs') }}" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      <!-- 1. Home Tab -->
+      <li class="md-tabs__item">
+        <a href="{{ "" | url }}" class="md-tabs__link{% if page.url == "" %} md-tabs__link--active{% endif %}" data-tab="home">
+          Home
+        </a>
+      </li>
+
+      <!-- 2. Pipeline Overview Tab -->
+      <li class="md-tabs__item">
+        {% if is_v1 %}
+          <a href="{{ "v1.0.0/overview/" | url }}" class="md-tabs__link{% if "v1.0.0/overview/" in page.url or page.url == "v1.0.0/" %} md-tabs__link--active{% endif %}" data-tab="overview">
+            Pipeline Overview
+          </a>
+        {% else %}
+          <a href="{{ "overview/" | url }}" class="md-tabs__link{% if "overview/" in page.url %} md-tabs__link--active{% endif %}" data-tab="overview">
+            Pipeline Overview
+          </a>
+        {% endif %}
+      </li>
+
+      <!-- 3. TopWidth Tab -->
+      <li class="md-tabs__item">
+        {% if is_v1 %}
+          <a href="{{ "v1.0.0/tw/" | url }}" class="md-tabs__link{% if "v1.0.0/tw/" in page.url %} md-tabs__link--active{% endif %}" data-tab="tw">
+            TopWidth
+          </a>
+        {% else %}
+          <a href="{{ "tw/" | url }}" class="md-tabs__link{% if "tw/" in page.url %} md-tabs__link--active{% endif %}" data-tab="tw">
+            TopWidth
+          </a>
+        {% endif %}
+      </li>
+
+      <!-- 4. Depth Tab -->
+      <li class="md-tabs__item">
+        {% if is_v1 %}
+          <a href="{{ "v1.0.0/y/" | url }}" class="md-tabs__link{% if "v1.0.0/y/" in page.url %} md-tabs__link--active{% endif %}" data-tab="y">
+            Depth
+          </a>
+        {% else %}
+          <a href="{{ "y/" | url }}" class="md-tabs__link{% if "y/" in page.url %} md-tabs__link--active{% endif %}" data-tab="y">
+            Depth
+          </a>
+        {% endif %}
+      </li>
+
+      <!-- 5. Shape Tab -->
+      <li class="md-tabs__item">
+        {% if is_v1 %}
+          <a href="{{ "v1.0.0/r/" | url }}" class="md-tabs__link{% if "v1.0.0/r/" in page.url %} md-tabs__link--active{% endif %}" data-tab="r">
+            Shape
+          </a>
+        {% else %}
+          <a href="{{ "r/" | url }}" class="md-tabs__link{% if "r/" in page.url %} md-tabs__link--active{% endif %}" data-tab="r">
+            Shape
+          </a>
+        {% endif %}
+      </li>
+
+      <!-- 6. Roughness Tab -->
+      <li class="md-tabs__item">
+        {% if is_v1 %}
+          <a href="{{ "v1.0.0/n/" | url }}" class="md-tabs__link{% if "v1.0.0/n/" in page.url %} md-tabs__link--active{% endif %}" data-tab="n">
+            Roughness
+          </a>
+        {% else %}
+          <a href="{{ "n/" | url }}" class="md-tabs__link{% if "n/" in page.url %} md-tabs__link--active{% endif %}" data-tab="n">
+            Roughness
+          </a>
+        {% endif %}
+      </li>
+
+      <!-- 7. References Tab -->
+      <li class="md-tabs__item">
+        <a href="{{ "references/" | url }}" class="md-tabs__link{% if "references/" in page.url %} md-tabs__link--active{% endif %}" data-tab="references">
+          References
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

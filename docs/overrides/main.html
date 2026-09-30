@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block hero %}
+{% if page and page.is_homepage %}
+<section class="hero-section">
+  <canvas id="neural-watershed-canvas"></canvas>
+  <div class="hero-content">
+    <h1 class="hero-title">Machine Learning-Powered Channel Parameterization</h1>
+    <p class="hero-subtitle">
+      A physics-guided, multi-stage <strong>machine learning pipeline</strong> for predicting
+      bankfull width, depth, cross-section shape, and Manning's roughness
+      at continental scale river reaches.
+    </p>
+    <div class="hero-badges">
+      <span class="hero-badge">2.8M+ Reaches</span>
+      <span class="hero-badge">Explainable AI (XAI)</span>
+      <span class="hero-badge">Hybrid Ensembles</span>
+      <span class="hero-badge">Confidence-Quantified</span>
+      <span class="hero-badge">Version 2.0.0</span>
+    </div>
+    <a href="overview/" class="hero-cta">Explore the Pipeline →</a>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block site_nav %}
+  {% if nav %}
+    {% if page and page.meta and page.meta.hide %}
+      {% set hidden = "hidden" if "navigation" in page.meta.hide %}
+    {% endif %}
+    <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" {{ hidden }}>
+      <!-- Edge Indicator Handle (Visible at left edge when drawer is auto-hidden) -->
+      <label class="drawer-edge-handle" for="__drawer" title="Open navigation menu" aria-label="Open navigation menu">
+        <span class="drawer-edge-handle-bar"></span>
+        <svg class="drawer-edge-handle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+        </svg>
+        <span class="drawer-edge-handle-label">Menu</span>
+      </label>
+
+      <!-- Full-Height Left Edge Hover Zone -->
+      <div class="drawer-edge-hover-zone" aria-hidden="true"></div>
+
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner">
+          {% include "partials/nav.html" %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block extracopyright %}
+<div class="noaa-footer">
+  <div class="partner-logos">
+    <img src="{{ 'assets/noaa_digital_logo-2022.png' | url }}" alt="NOAA Logo" class="noaa-logo">
+    <img src="{{ 'assets/Lynker-Primary-Logo.png' | url }}" alt="Lynker Logo" class="lynker-logo">
+  </div>
+  <span>
+    Developed by <strong>Arash Modaresi Rad</strong> in partnership with
+    <a href="https://water.noaa.gov/">NOAA Office of Water Prediction</a>
+    &amp; <a href="https://lynker.com/">Lynker</a>
+  </span>
+</div>
+{% endblock %}

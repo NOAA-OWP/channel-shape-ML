@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file. We follow t
 
 ---
 
+## [Unreleased]
+
+### Additions
+- Interactive MkDocs Material technical documentation platform deployed to GitHub Pages (`https://noaa-owp.github.io/channel-shape-ML/`).
+- structured technical documentation pages spanning v1.0.0 and v2.0.0 sequential DAG parameterization pipelines.
+- Interactive HTML5 canvas.
+- Explainable AI (XAI) feature attribution guides including SHAP beeswarm distributions and 2D dependency surfaces.
+- Dynamic client-side version switching between v1.0.0 and v2.0.0 architectures.
+- Automated GitHub Pages deployment pipeline via `.github/workflows/deploy-site.yml`.
+- Dedicated documentation requirements manifest (`requirements-docs.txt`).
+
 ## [v2.0.0-alpha.1] - 2026-09-04 - [PR#59](https://github.com/NOAA-OWP/channel-shape-ML/pull/59)
 
 This PR implements the first milestone of the v2.0.0 architecture (Epic #57, closes #58) by introducing a 6-stage sequential DAG inference pipeline, Gaussian Markov Random Field (GMRF) topological regularization along stream networks, decoupled model loading with local and Amazon S3 streaming support, and containerized Docker and Conda deployment workflows. The v2.0.0 architecture was developed to use USGS gage observations, HydroSWOT ADCP measurements, and MIP for training and uses hydrofabric network attributes only as predictors. Legacy v1.0.0 training and preprocessing pipelines are reorganized into a transitional legacy directory to keep the root directory clean while maintaining full baseline reproducibility.

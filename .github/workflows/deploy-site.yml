@@ -1,0 +1,44 @@
+name: Deploy MkDocs Site
+
+on:
+  push:
+    branches:
+      - master
+      - v2-dev
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - '.github/workflows/deploy-site.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install \
+            "mkdocs-material>=9.5.0" \
+            "mkdocs-glightbox>=0.3.0" \
+            "mike>=2.0.0" \
+            "pymdown-extensions>=10.7"
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Deploy to GitHub Pages
+        run: |
+          mkdocs gh-deploy --force
